@@ -61,7 +61,7 @@ optimization. MRS bears similarities with information-theoretic approaches
 such as entropy search (ES). However, while ES aims in each query at maximizing the
 information gain with respect to the global maximum, MRS aims at minimizing the
 expected immediate regret of its ultimate recommendation for the optimum. While empirically ES and MRS perform similar in most of the
-cases, MRS produces fewer outliers with high regret than ES. We provide empirical
+cases, MRS produces fewer outliers with high immediate regret than ES. We provide empirical
 results both for a synthetic single-task optimization problem as well as for a
 simulated multi-task robotic control problem.
 \end{abstract}
@@ -74,8 +74,10 @@ non-convex, do not necessarily provide derivatives, are expensive to evaluate (e
 computationally, economically, or morally), and are potentially noisy. Under
 these conditions, there is typically no guarantee for finding the true optimum of the
 function with a finite number of function evaluations. Instead, one often aims
-at finding a solution which has small regret with regard to the true optimum. BO
-aims at finding such a solution of minimum regret while  minimizing at the same
+at finding a solution which has small \emph{immediate regret} with regard to the true optimum, where 
+``immediate regret'' denotes the difference of function value of the selected solution to 
+true the optimal function value. BO
+aims at finding such a solution of minimum immediate regret while  minimizing at the same
 time the number of evaluations of the expensive target function. For this, BO
 maintains a probabilistic surrogate model of the objective function, and a
 myopic utility or acquisition function, which defines the ``usefulness'' of
@@ -95,7 +97,8 @@ improvement-based acquisition functions over optimistic acquisition functions to
 information- theoretic acquisition functions (see Section
 \ref{Section:Background}). In the latter class, the group of entropy
 search-based approaches
-\cite{villemonteix_informational_2008, hennig_entropy_2012,hernandez-lobato_predictive_2014}, which aims at maximizing the information gain regarding
+\cite{villemonteix_informational_2008, hennig_entropy_2012,hernandez-lobato_predictive_2014}, 
+which aims at maximizing the information gain regarding
 the true optimum, has achieved state-of-the-art performance on a number of
 synthetic and real-world problems. However, performance is often reported as the
 median over many runs, which bears the risk that the median masks ``outlier'' runs that
@@ -190,9 +193,8 @@ $$ a_{PES}(\mathbf{x}, \mathcal{D}_n)
   = H(y \vert \mathcal{D}_n, \mathbf{x}) - \mathbb{E}_{\mathbf{x}^\star \vert \mathcal{D}_n}
     [H(y \vert \mathcal{D}_n, \mathbf{x}, \mathbf{x}^\star)].$$
 This acquisition function is known as predictive entropy search
-\citep[PES,][]{hernandez-lobato_predictive_2014}. PES can be approximated more
-efficiently, does not require discretization, and has obtained empirical results
-that are as least as good as discretized ES with expectation propagation. A further advantage of PES is that it allows a formal treatment of GP hyperparameters.
+\citep[PES,][]{hernandez-lobato_predictive_2014}. PES does not require discretization
+and allows a formal treatment of GP hyperparameters.
 
 
 \textbf{Contextual Policy Search} (CPS)
