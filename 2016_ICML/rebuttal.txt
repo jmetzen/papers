@@ -1,0 +1,36 @@
+We thank all reviewers for their constructive reviews. We can only provide feedback to the most significant points:
+
+R1: The main empirical results claimed by the authors show that MRS can do better than methods such as ES when compared using the mean regret. This could also be a result of the more global exploration performed by ES
+A: Actually, we observed empirically that ES explores more locally relative to MRS (compare Figure 3). We will try to relate the results obtained in the paper to the references provided by the reviewer.
+
+R2: The abstract and introduction sound like Bayesian Optimization is always about minimizing regret. This is not true.
+A: With "regret", we were referring to the immediate regret as defined in Section 3 which is defined based on the final recommendation of the algorithm for the optimum after N evaluations. We will clarify that BO is not about minimizing the regret notion used in the bandit literature (defined on the obtained function values during optimization).
+
+R2: It is unclear at this point whether PES is actually cheaper than ES, as the authors claim. [...]
+A: We will remove any assessment stating PES being superior compared to ES and refer the reader to external literature for a cpmparison of the two approaches.
+
+R3: The problem formulation of optimizing the expected regret reduction (ERR) at the best point \tilde{x_n} appears to have a fundamental problem: it fixes \tilde{x_n} and then tries to change the predictive distribution to maximally reduce the regret of this fixed \tilde{x_n} under the predictive distribution. (MRS has exactly the same problem, only that it does this for multiple fixed \tilde{x_n} in a Bayesian fashion.)
+A: The \tilde{x} in the first and second term of a_MRS are not fixed but drawn from different distributions ("p^\star_n" versus "p^\star_{\mathcal{D}_n \cup \{(x^q, y)\}"). Thus, MRS does not fix \tilde{x_n} (not even in a Bayesian fashion since the distributions are different).
+
+Related to this: we noticed after submission that there was a mistake in our definition of MRS^{point} (the implementation was correct). It should have been:
+
+a_{MRS^point}(x^q)
+     = \min_{\tilde x} ER(p_n)(\tilde x)
+       - E_{y \vert p_n(f), x^q}[\min_{\tilde x}  ER(p^{[x^q, y]}_n)(\tilde x)]
+
+Note that different minimizers \tilde{x} in the first and second term may be chosen. Thus, \tilde{x} is also not fixed for MRS^{point}. We apologize for the confusion caused by this mistake.
+
+R3: "Thus, sampling in this parameter range can reduce the expected regret considerably either by confirming that the true value of f(x) on x >= 3.5 is actually as small as expected or by switching \tilde{x}_{n+1} to this area if f(x) turns out to be large." I fully agree with this statement, but the problem with MRS is that it only targets the first of these terms (confirming that the current \tilde{x_n} is good) and not the second (gathering information that makes us change \tilde{x}_{n+1}).
+A: Whether the first or second case occur depends on the observed function value and is not a choice of the algorithm. Figure 1 actually shows an example where MRS samples at points which reveal little about the function value at \tilde{x_n}=1.5 but which have a small chance of changing \tilde{x}_{n+1} to 4.0.
+
+R3: What is the performance of UCB and MRS in Experiment 1 with N=200, in terms of mean and median?
+A: We ran 50 repetitions of GP-UCB and MRS for N=200. We must not include any URLs or graphics in this rebuttal so we can summarize the results only verbally: Both GP-UCB and MRS reach the same level of immediate regret after 200 steps (in mean and median) with no significant difference according to a Wilcoxon signed-rank test.
+
+R3: While some experiments without model mismatch are useful, there should also be some with it.
+A:  We performed a similar experiment as in Section 3.2 of Henning and Schuler, where the functions are sampled from a GP prior with rational quadratic kernel but the model used in the optimizer was based on an RBF kernel (thus there is model-mismatch). The empirical findings are qualitatively very similar to those in Figure 2; the main difference being that all methods incur higher immediate regret relative to the setting without model-mismatch (nearly one order of magnitude).
+
+
+Additional remarks:
+ * The principal concerns about changing the acquisition function and the "recommender" for the final choice at the same time are valid. However, we used the same recommender for all acquisition functions, namely the maximizer of GP model. Note that this maximizer is also the point of minimum expected immediate regret for a GP (not to be confused with maximizer of the expected regret reduction). We will clarify this point in the revised version of the paper.
+
+ * The choice of kappa=5 for UCB in Sec. 5.2 was not arbitrary but based on preliminary experiments comparing five different values for kappa and GP-UCB (fixed kappa=5 being the best).
