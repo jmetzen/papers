@@ -1,4 +1,4 @@
-\documentclass{article} % For LaTeX2e
+\documentclass[10pt,letterpaper]{article} % For LaTeX2e
 
 \usepackage{hyperref}
 \usepackage{url}
@@ -9,9 +9,7 @@
 \usepackage{amsmath,amssymb}
 \def\D{\mathrm{d}}
 
-\usepackage{umoline}
-%\newcommand{\todo}[2]{\Underline{#1}\textbf{ [\scriptsize TODO: #2] }}
-\newcommand{\todo}[2]{#1}
+\usepackage{times}
 
 \graphicspath{{.}{pics/}}
 
@@ -39,7 +37,7 @@
 % unless you've provided the [accepted] option to the icml2015
 % package.
 \icmlauthor{Jan Hendrik Metzen}{janmetzen@mailbox.org}
-\icmladdress{Universit{\"a}t Bremen, 28359 Bremen, Germany \&
+\icmladdress{Universit{\"a}t Bremen, 28359 Bremen, Germany \\
              Robert Bosch GmbH, 70442 Stuttgart, Germany}
 %\icmlauthor{Your CoAuthor's Name}{email@coauthordomain.edu}
 %\icmladdress{Their Fantastic Institute,
@@ -75,8 +73,8 @@ computationally, economically, or morally), and are potentially noisy. Under
 these conditions, there is typically no guarantee for finding the true optimum of the
 function with a finite number of function evaluations. Instead, one often aims
 at finding a solution which has small \emph{immediate regret} with regard to the true optimum, where 
-``immediate regret'' denotes the difference of function value of the selected solution to 
-true the optimal function value. BO
+``immediate regret'' denotes the difference of the true optimal function value 
+and the function value of the selected solution. BO
 aims at finding such a solution of minimum immediate regret while  minimizing at the same
 time the number of evaluations of the expensive target function. For this, BO
 maintains a probabilistic surrogate model of the objective function, and a
@@ -120,11 +118,11 @@ empirical results on a simulated robotic control problem (Section
 
 In this section, we provide a brief overview of
 \textbf{Bayesian Optimization} (BO). We refer to \citet{shahriari_taking_2016} for a recent more
-extensive review of BO. BO can be applied to black-back optimization
+extensive review of BO. BO can be applied to black-box optimization
 problems, which can be framed as optimizing an objective function $f:
 \mathcal{X} \to \mathbb{R}$ on some bounded set $\mathcal X \subset
 \mathbb{R}^D$. In contrast to most  other black-box optimization methods, BO is
-a global method which makes use of all historic evaluations of $f(\mathbf{x})$
+a global method which makes use of all previous evaluations of $f(\mathbf{x})$
 rather than using only a subset of the history for approximating a local
 gradient or Hessian. For this, BO maintains a \emph{probabilistic model} for
 $f(\mathbf{x})$, typically a Gaussian process \citep[GP,][]{rasmussen_gaussian_2006}, and uses this model for deciding
@@ -234,7 +232,7 @@ regret search} (MRS), which explicitly aims at minimizing the expected immediate
 regret.
 
 \subsection{Formulation}
-Let $X \subset \mathcal{R}^D$ be some bounded domain and $f: \mathcal{X} \mapsto
+Let $\mathcal{X} \subset \mathcal{R}^D$ be some bounded domain and $f: \mathcal{X} \mapsto
 \mathbb{R}$ be a function. We are interested in finding the maximum
 $\mathbf{x}^\star$ of $f$ on $\mathcal{X}$. Let there be a probability measure
 $p(f)$ over the space of functions $f: \mathcal{X} \mapsto \mathbb{R}$, such as
