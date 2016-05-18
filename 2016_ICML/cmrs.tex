@@ -67,22 +67,22 @@ simulated multi-task robotic control problem.
 \section{INTRODUCTION}
 
 Bayesian optimization \citep[BO,][]{shahriari_taking_2016} denotes a sequential,
-model-based, global approach for optimizing black-box functions that are
-non-convex, do not necessarily provide derivatives, are expensive to evaluate (either
-computationally, economically, or morally), and are potentially noisy. Under
+model-based, global approach for optimizing black-box functions. It is particularly well-suited for problems
+which are non-convex, do not necessarily provide derivatives, are expensive to evaluate (either
+computationally, economically, or morally), and can potentially be noisy. Under
 these conditions, there is typically no guarantee for finding the true optimum of the
 function with a finite number of function evaluations. Instead, one often aims
 at finding a solution which has small \emph{immediate regret} with regard to the true optimum, where 
 ``immediate regret'' denotes the difference of the true optimal function value 
-and the function value of the selected solution. BO
-aims at finding such a solution of minimum immediate regret while  minimizing at the same
+and the function value of the ``solution'' selected by the algorithm after a finite number of function evaluations. BO
+aims at finding such a solution of small immediate regret while  minimizing at the same
 time the number of evaluations of the expensive target function. For this, BO
 maintains a probabilistic surrogate model of the objective function, and a
 myopic utility or acquisition function, which defines the ``usefulness'' of
 performing an additional function evaluation at a certain input for learning about the optimum.
 
-BO has been applied to a diverse set of problems, ranging from automatic  machine
-learning \cite{bergstra_algorithms_2011,snoek_practical_2012} over robotics
+BO has been applied to a diverse set of problems, ranging from hyperparameter optimization
+of machine learning models \cite{bergstra_algorithms_2011,snoek_practical_2012} over robotics
 \cite{calandra_bayesian_2015,lizotte_automatic_2007,kroemer_combining_2010,alonso_an_2015} to
 sensor networks \cite{srinivas_gaussian_2010} and environmental monitoring
 \cite{6385653}. For a more comprehensive overview of application areas, we refer
