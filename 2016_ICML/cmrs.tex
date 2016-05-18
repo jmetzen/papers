@@ -586,9 +586,8 @@ objective is explicitly focused on minimizing the regret. An empirical
 comparison with PES remains future work; since PES uses the same objective as ES
 (minimizing $H(\mathbf{x}^\star)$), it will likely show the same deficit of
 ignoring areas that have small probability $p^\star$ but could nevertheless cause a large
-potential regret. On the other hand, PES allows a formal treatment
-of GP hyperparameters and can be approximated more efficiently than ES or MRS.
-Potential future research on approaches for addressing
+potential regret. On the other hand, in contrast to ES and MRS, PES allows a formal treatment
+of GP hyperparameters, which can make it more sample-efficient. Potential future research on approaches for addressing
 GP hyperparameters and more efficient approximation techniques for MRS would thus be desirable. Additionally,
 combining MRS with active learning as done for entropy search by
 \citet{metzen_active_2015} would be interesting. Moreover, we consider MRS to
