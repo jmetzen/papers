@@ -162,7 +162,11 @@ current best value, which can again be computed in closed form for a GP model:
   &  = \sigma_n(\mathbf{x})\left(\gamma(\mathbf{x})\Phi(\gamma(\mathbf{x})) + \phi(\gamma(\mathbf{x}))\right),
 \end{split}
 \end{equation*}
-where $\phi(\cdot)$ denotes the standard Gaussian density function.
+where $\phi(\cdot)$ denotes the standard Gaussian density function.  A
+generalization of EI is the \emph{knowledge gradient} factor \cite
+{frazier_knowledge-gradient_2009}, which can better handle noisy observations,
+which impede the estimation of the incumbent. The knowledge gradient requires
+defining a set $A_n$ from which one would choose the final solution.
 
 The third class of acquisition functions are \emph{information-based policies},
 which entail Thompson sampling and entropy search
