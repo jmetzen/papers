@@ -220,7 +220,8 @@ search approaches in robotics.
 \section{MINIMUM REGRET SEARCH} \label{Section:MRS}
 
 While information-based policies for Bayesian optimization such as ES and PES
-have performed very well empirically, their internal objective of minimizing
+have performed very well empirically, we discuss in Section \ref{Section:MRS_Illustration} 
+that their internal objective of minimizing
 the uncertainty in the location of the optimizer $\mathbf{x}^\star$, i.e.,
 minimizing the differential entropy of $p_\star$, is actually different (albeit
 related) to the common external objective of minimizing the simple regret of
@@ -230,9 +231,9 @@ $R_f(\mathbf{\tilde  x}_N) = f(\mathbf{x}^\star) - f(\mathbf{\tilde  x}_N) = \ma
 
 Clearly, $\mathbf{x}^\star$ has zero and thus minimum simple regret, but a query that
 results in the maximal decrease in $H(\mathbf{x}^\star)$ is not necessarily the
-one that also results in the maximal decrease in the expected simple regret
-as we will discuss in Section \ref{Section:MRS_Illustration}. In this section, we propose \emph{minimum
-regret search} (MRS), which explicitly aims at minimizing the expected simple
+one that also results in the maximal decrease in the expected simple regret. 
+In this section, we propose \emph{minimum regret search} (MRS), 
+which explicitly aims at minimizing the expected simple
 regret.
 
 \subsection{Formulation}
