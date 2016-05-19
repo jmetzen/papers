@@ -58,8 +58,8 @@ We propose minimum regret search (MRS), a novel acquisition function for Bayesia
 optimization. MRS bears similarities with information-theoretic approaches
 such as entropy search (ES). However, while ES aims in each query at maximizing the
 information gain with respect to the global maximum, MRS aims at minimizing the
-expected immediate regret of its ultimate recommendation for the optimum. While empirically ES and MRS perform similar in most of the
-cases, MRS produces fewer outliers with high immediate regret than ES. We provide empirical
+expected simple regret of its ultimate recommendation for the optimum. While empirically ES and MRS perform similar in most of the
+cases, MRS produces fewer outliers with high simple regret than ES. We provide empirical
 results both for a synthetic single-task optimization problem as well as for a
 simulated multi-task robotic control problem.
 \end{abstract}
@@ -72,10 +72,10 @@ which are non-convex, do not necessarily provide derivatives, are expensive to e
 computationally, economically, or morally), and can potentially be noisy. Under
 these conditions, there is typically no guarantee for finding the true optimum of the
 function with a finite number of function evaluations. Instead, one often aims
-at finding a solution which has small \emph{immediate regret} with regard to the true optimum, where 
-``immediate regret'' denotes the difference of the true optimal function value 
+at finding a solution which has small \emph{simple regret} \cite{bubeck_pure_2009}) with regard to the true optimum, where 
+simple regret denotes the difference of the true optimal function value 
 and the function value of the ``solution'' selected by the algorithm after a finite number of function evaluations. BO
-aims at finding such a solution of small immediate regret while  minimizing at the same
+aims at finding such a solution of small simple regret while  minimizing at the same
 time the number of evaluations of the expensive target function. For this, BO
 maintains a probabilistic surrogate model of the objective function, and a
 myopic utility or acquisition function, which defines the ``usefulness'' of
@@ -102,10 +102,10 @@ synthetic and real-world problems. However, performance is often reported as the
 median over many runs, which bears the risk that the median masks ``outlier'' runs that
 perform considerably worse than the rest. In fact, our results indicate that
 the performance of sampling-based entropy search is not necessarily better
-than traditional and cheaper acquisition functions according to the mean immediate regret.
+than traditional and cheaper acquisition functions according to the mean simple regret.
 
 In this work, we propose minimum regret search (MRS), a novel acquisition
-function that explicitly aims at minimizing the expected immediate regret
+function that explicitly aims at minimizing the expected simple regret
 (Section \ref{Section:MRS}). MRS performs well according to both the mean and
 median performance on a synthetic problem (Section
 \ref{Section:ResultsSingleTask}). Moreover, we discuss how MRS can be extended
@@ -223,16 +223,16 @@ While information-based policies for Bayesian optimization such as ES and PES
 have performed very well empirically, their internal objective of minimizing
 the uncertainty in the location of the optimizer $\mathbf{x}^\star$, i.e.,
 minimizing the differential entropy of $p_\star$, is actually different (albeit
-related) to the common external objective of minimizing the immediate regret of
+related) to the common external objective of minimizing the simple regret of
 $\mathbf{\tilde x}_N$, the recommendation of BO for $\mathbf{x}^\star$ after $N$
-trials, where we define the immediate regret of $\mathbf{\tilde x}_N$ as
+trials, where we define the simple regret of $\mathbf{\tilde x}_N$ as
 $R_f(\mathbf{\tilde  x}_N) = f(\mathbf{x}^\star) - f(\mathbf{\tilde  x}_N) = \max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{\tilde x}_N)$.
 
-Clearly, $\mathbf{x}^\star$ has zero and thus minimum immediate regret, but a query that
+Clearly, $\mathbf{x}^\star$ has zero and thus minimum simple regret, but a query that
 results in the maximal decrease in $H(\mathbf{x}^\star)$ is not necessarily the
-one that also results in the maximal decrease in the expected immediate regret
+one that also results in the maximal decrease in the expected simple regret
 as we will discuss in Section \ref{Section:MRS_Illustration}. In this section, we propose \emph{minimum
-regret search} (MRS), which explicitly aims at minimizing the expected immediate
+regret search} (MRS), which explicitly aims at minimizing the expected simple
 regret.
 
 \subsection{Formulation}
@@ -241,13 +241,13 @@ Let $\mathcal{X} \subset \mathcal{R}^D$ be some bounded domain and $f: \mathcal{
 $\mathbf{x}^\star$ of $f$ on $\mathcal{X}$. Let there be a probability measure
 $p(f)$ over the space of functions $f: \mathcal{X} \mapsto \mathbb{R}$, such as
 a GP. Based on this $p(f)$, we would ultimately like to
-select an $\mathbf{\tilde x}$ which has minimum immediate regret
-$R_f(\mathbf{\tilde x})$. We define the expected immediate regret ER of
+select an $\mathbf{\tilde x}$ which has minimum simple regret
+$R_f(\mathbf{\tilde x})$. We define the expected simple regret ER of
 selecting parameter $\mathbf{x}$ under $p(f)$ as follows:
 $$\text{ER}(p)(\mathbf{x}) = \mathbb{E}_{p(f)}[R_f(\mathbf{x})]
 = \mathbb{E}_{p(f)}[\max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{
 x})]$$
-The minimizer $\mathbf{\tilde x}$ of the expected immediate regret under fixed $p(f)$ can be determined efficiently in the case of a GP since it is identical to the maximizer of the GP's mean $\mu_N(\mathbf{x})$. However, in general, $p(f)$ depends on data and it is desirable to select the data such that $\text{ER}$ is also minimized with regard to the resulting $p(f)$.
+The minimizer $\mathbf{\tilde x}$ of the expected simple regret under fixed $p(f)$ can be determined efficiently in the case of a GP since it is identical to the maximizer of the GP's mean $\mu_N(\mathbf{x})$. However, in general, $p(f)$ depends on data and it is desirable to select the data such that $\text{ER}$ is also minimized with regard to the resulting $p(f)$.
 
 In $N$-step minimum regret search (MRS), we are given a budget of $N$ function evaluations and are to choose a sequence of $N$ query points
 $X^q_N=\{\mathbf{x}^q_1, \dots, \mathbf{x}^q_N\}$ for which we evaluate $y_n = f(\mathbf{x}^q_n) +
@@ -265,7 +265,7 @@ common approach in BO and select $\mathbf{x}^q_n$
 sequentially in a myopic way. However, as $\mathbf{\tilde x}_N$ itself depends
 on $\mathcal{D}_N$ and is thus unknown for $n < N$, we have to use proxies for it based on the currently
 available subset $\mathcal{D}_n \subset \mathcal{D}_N$.  One simple choice for a proxy is to use
-the point which has minimal expected immediate regret under $p_n(f) =
+the point which has minimal expected simple regret under $p_n(f) =
 p(f \vert \mathcal{D}_n)$, i.e.,
 $\mathbf{\tilde x} = \arg\min_\mathbf{x} \text{ER}(p_n)(\mathbf{x})$.
 %Based on this, we define the one-step
@@ -309,7 +309,7 @@ a_{\text{MRS}}(\mathbf{x}^q)
 
 MRS can thus be seen as a more Bayesian treatment, where we marginalize our
 uncertainty about $\mathbf{\tilde x}_N$, while MRS$^\text{points}$ is more akin
-to a point-estimate since we use a single point (the minimizer of the expected immediate regret)
+to a point-estimate since we use a single point (the minimizer of the expected simple regret)
 as proxy for $\mathbf{\tilde x}_N$.
 
 \subsection{Approximation}
@@ -353,7 +353,7 @@ acquisition functions on a simple one-dimensional target function. The left
 graphic shows a hypothetical GP posterior (illustrated by its mean and standard
 deviation) for length scale $l=0.75$, and the resulting probability of $\mathbf{x}$
 being the optimum of $f$ denoted by $p^\star$.
-Moreover, the expected immediate regret of selecting $\mathbf{x}$ denoted by
+Moreover, the expected simple regret of selecting $\mathbf{x}$ denoted by
 $\text{ER}(\mathbf{x})$ is shown. The minimum of $\text{ER}(\mathbf{x})$ and the maximum
 of $p^\star$ are both at $\mathbf{\tilde x}=1.5$. The expected regret of $\mathbf{\tilde x}$
 is approximately $\text{ER}(\mathbf{\tilde x}) = 0.07$. We plot $\mathbb{E}[\max(f(\mathbf{x}) -
@@ -471,8 +471,8 @@ However, we provide additional histograms on the regret distribution.
 \centering
 \includegraphics[width=.9\textwidth]{empirical_comparison}
 \includegraphics[width=.9\textwidth]{hist}
-\caption{(Top) Median and mean immediate regret over $250$ repetitions for different acquisition functions. Shown is the immediate regret of the recommendation $\mathbf{\tilde x}_N$ after $N$ trials, i.e., the point which maximizes the GP posterior
-mean. (Bottom) Histogram of the immediate regret after performing $N=100$ trials for different acquisition functions (note the log-scales).}
+\caption{(Top) Median and mean simple regret over $250$ repetitions for different acquisition functions. Shown is the simple regret of the recommendation $\mathbf{\tilde x}_N$ after $N$ trials, i.e., the point which maximizes the GP posterior
+mean. (Bottom) Histogram of the simple regret after performing $N=100$ trials for different acquisition functions (note the log-scales).}
 \label{fig:empirical_comparison}
 \end{figure*}
 
@@ -485,25 +485,28 @@ mean. (Bottom) Histogram of the immediate regret after performing $N=100$ trials
 \label{fig:es_analysis}
 \end{figure*}
 
-Figure \ref{fig:empirical_comparison} summarizes the results: according to the
-median of the immediate regret (top left), ES, MRS, and MRS$^{point}$ perform
+Figure \ref{fig:empirical_comparison} summarizes the results for a pure
+exploration setting, where we are only interested in the quality of the
+algorithm's recommendation for the optimum after $N$ queries but not in the
+quality of the queries themselves:  according to the
+median of the simple regret (top left), ES, MRS, and MRS$^{point}$ perform
 nearly identical, while EI is about an order of magnitude worse. GP-UCB performs
 even worse initially but surpasses EI eventually\footnote{GP-UCB reaches 
-the same level of mean and median immediate regret  as MRS after $N=200$ steps 
+the same level of mean and median simple regret  as MRS after $N=200$ steps 
 (in mean and median) with no significant difference  according to a Wilcoxon signed-rank test.}. 
 PI performs the worst as it
 exploits too aggressively. These results are roughly in correspondence with prior
 results \cite{hennig_entropy_2012,hernandez-lobato_predictive_2014} on the same
 task; note, however, that \citet{hernandez-lobato_predictive_2014} used a lower
 noise level and thus, absolute values are not comparable. However, according to
-the \emph{mean} immediate regret, the picture changes considerably (top right):
+the \emph{mean} simple regret, the picture changes considerably (top right):
 here, MRS, MRS$^{point}$, and EI perform roughly on par while ES is about an order of
-magnitude worse. This can be explained by the distribution of the immediate
+magnitude worse. This can be explained by the distribution of the simple
 regrets (bottom): while the distributions are fairly non-normal for all
-acquisition functions, there are considerably more runs with very high immediate
+acquisition functions, there are considerably more runs with very high simple
 regret ($R_f(\mathbf{\tilde x}_N)>10^{-2}$) for ES (10) than for MRS (4) or EI (4).
 
-We illustrate one such case where ES incurs high immediate regret in Figure
+We illustrate one such case where ES incurs high simple regret in Figure
 \ref{fig:es_analysis}. The same set of representer points has been used for ES and MRS.
 While both ES and MRS assign a non-zero density $p^\star$
 (representer points) to the area of the true optimum of the function
@@ -515,9 +518,9 @@ how much correlation their is between the representer points according to $p(f)$
 Thus, predictive entropy search \cite{hernandez-lobato_predictive_2014} would likely be affected by the
 same deficiency. In contrast, MRS focuses first on areas which have not been
 explored and have a non-zero $p^\star$, since those are areas with high expected
-immediate regret (see Section \ref{Section:MRS_Illustration}). Accordingly, MRS is less likely to incur a high immediate regret. In summary, the MRS-based acquisition functions are the only
+simple regret (see Section \ref{Section:MRS_Illustration}). Accordingly, MRS is less likely to incur a high simple regret. In summary, the MRS-based acquisition functions are the only
 acquisition functions that perform well both according to the median and the
-mean immediate regret; moreover, MRS performs slightly better than
+mean simple regret; moreover, MRS performs slightly better than
 MRS$^{point}$ and we will focus on MRS subsequently.
 
 
