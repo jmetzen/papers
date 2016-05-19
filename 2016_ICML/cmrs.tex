@@ -337,8 +337,10 @@ $\text{MRS}(\mathbf{x}^q)$ into a weighted sum. The discretization of $p^\star$ 
 \citet{hennig_entropy_2012} in detail; we select the representer points as
 follows: for each representer point, we sample $250$ candidate points uniform
 randomly from $\mathcal{X}$ and select the representer point by Thompson
-sampling from $p(f)$ on the candidate points. Moreover, estimating $p^\star_n$ on the
-representer points is relatively cheap as we can reuse the samples used for approximating $\mathbb{E}_{p(f)}$.
+sampling from $p(f)$ on the candidate points. Moreover, estimating $p^\star_{\mathcal{D}_n}$ 
+on the representer points can be done relatively cheap by reusing the samples used 
+for approximating $\mathbb{E}_{p(f)}$, which incurs a small bias which had, however, a negligible 
+effect in preliminary experiments.
 
 The resulting estimate of $a_{\text{MRS}}$ would have high variance and would require $n_f$ to be
 chosen relatively large; however, we can reduce the variance considerably by using
