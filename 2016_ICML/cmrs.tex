@@ -248,19 +248,22 @@ selecting parameter $\mathbf{x}$ under $p(f)$ as follows:
 $$\text{ER}(p)(\mathbf{x}) = \mathbb{E}_{p(f)}[R_f(\mathbf{x})]
 = \mathbb{E}_{p(f)}[\max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{
 x})]$$
-The minimizer $\mathbf{\tilde x}$ of the expected simple regret under fixed $p(f)$ can be approximated efficiently in the case of a GP since it is identical to the maximizer of the GP's mean $\mu_N(\mathbf{x})$. However, in general, $p(f)$ depends on data and it is desirable to select the data such that $\text{ER}$ is also minimized with regard to the resulting $p(f)$.
 
-In $N$-step Bayesian optimization, we are given a budget of $N$ function evaluations and are to choose a sequence of $N$ query points
-$X^q_N=\{\mathbf{x}^q_1, \dots, \mathbf{x}^q_N\}$ for which we evaluate $y_n = f(\mathbf{x}^q_n) +
-\epsilon$ to obtain $\mathcal{D}_N = \{\mathbf{x}^q_n, y_n\}_{n=1}^N$. Based on this, MRS
-estimates $p_N(f) = p(f \vert \mathcal{D}_N)$  and recommends parameters
-$\mathbf{\tilde x}_N$ as the estimate of $\mathbf{x}^\star$ such that the
-expected regret under $p_N$ is minimized, i.e., $\mathbf{\tilde x}_N = \arg\min_\mathbf{x}
+In $N$-step BO, we are given a budget of $N$ function evaluations and are to choose a sequence of $N$ query points
+$X^q_N=\{\mathbf{x}^q_1, \dots, \mathbf{x}^q_N\}$ for which we evaluate $y_i = f(\mathbf{x}^q_i) +
+\epsilon$ to obtain $\mathcal{D}_N = \{\mathbf{x}^q_i, y_i\}_{i=1}^N$. Based on this, 
+ $p_N(f) = p(f \vert \mathcal{D}_N)$ is estimated and a point
+$\mathbf{\tilde x}_N$ is recommended as the estimate of $\mathbf{x}^\star$ such that the
+expected simple regret under $p_N$ is minimized, i.e., $\mathbf{\tilde x}_N = \arg\min_\mathbf{x}
 \text{ER}(p_N)(\mathbf{x})$.
- In general, we are interested in choosing a
-sequence $X^q_N$ such that we minimize
-$\min_\mathbf{x} \text{ER}(p_N)(\mathbf{x})$ with respect to the resulting $p_N$.
+The minimizer $\mathbf{\tilde x}_N$ of the expected simple regret under fixed
+$p(f)$ can be approximated efficiently in the case of a GP since it is
+identical to the maximizer of the GP's mean $\mu_N(\mathbf{x})$. 
 
+However, in general, $p(f)$ depends on data and it is desirable to select the data such
+that $\text{ER}$ is also minimized with regard to the resulting $p(f)$.
+We are thus interested in choosing a
+sequence $X^q_N$ such that we minimize the expected simple regret of $\mathbf{\tilde x}_N$ with respect to the $p_N$, where $p_N$ depends on $X^q_N$ and the (potentially noisy) observations $y_i$.
 As choosing the optimal sequence $X^q_N$ at once is intractable, we follow the
 common approach in BO and select $\mathbf{x}^q_n$
 sequentially in a myopic way. However, as $\mathbf{\tilde x}_N$ itself depends
