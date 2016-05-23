@@ -238,12 +238,12 @@ $p(f)$ over the space of functions $f: \mathcal{X} \mapsto \mathbb{R}$, such as
 a GP. Based on this $p(f)$, we would ultimately like to
 select an $\mathbf{\tilde x}$ which has minimum simple regret
 $R_f(\mathbf{\tilde x})$. We define the expected simple regret ER of
-selecting parameter $\mathbf{x}$ under $p(f)$ as follows:
+selecting parameter $\mathbf{x}$ under $p(f)$ as:
 $$\text{ER}(p)(\mathbf{x}) = \mathbb{E}_{p(f)}[R_f(\mathbf{x})]
 = \mathbb{E}_{p(f)}[\max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{
 x})]$$
 
-In $N$-step BO, we are given a budget of $N$ function evaluations and are to choose a sequence of $N$ query points
+In $N$-step Bayesian optimization, we are given a budget of $N$ function evaluations and are to choose a sequence of $N$ query points
 $X^q_N=\{\mathbf{x}^q_1, \dots, \mathbf{x}^q_N\}$ for which we evaluate $y_i = f(\mathbf{x}^q_i) +
 \epsilon$ to obtain $\mathcal{D}_N = \{\mathbf{x}^q_i, y_i\}_{i=1}^N$. Based on this, 
  $p_N(f) = p(f \vert \mathcal{D}_N)$ is estimated and a point
