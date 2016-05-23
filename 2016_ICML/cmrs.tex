@@ -38,7 +38,7 @@
 % package.
 \icmlauthor{Jan Hendrik Metzen}{janmetzen@mailbox.org}
 \icmladdress{Universit{\"a}t Bremen, 28359 Bremen, Germany \\
-             Robert Bosch GmbH, 70442 Stuttgart, Germany}
+             Corporate Research, Robert Bosch GmbH, 70442 Stuttgart, Germany}
 %\icmlauthor{Your CoAuthor's Name}{email@coauthordomain.edu}
 %\icmladdress{Their Fantastic Institute,
 %            27182 Exp St., Toronto, ON M6H 2T1 CANADA}
@@ -72,7 +72,7 @@ which are non-convex, do not necessarily provide derivatives, are expensive to e
 computationally, economically, or morally), and can potentially be noisy. Under
 these conditions, there is typically no guarantee for finding the true optimum of the
 function with a finite number of function evaluations. Instead, one often aims
-at finding a solution which has small \emph{simple regret} \cite{bubeck_pure_2009}) with regard to the true optimum, where 
+at finding a solution which has small \emph{simple regret} \cite{bubeck_pure_2009} with regard to the true optimum, where 
 simple regret denotes the difference of the true optimal function value 
 and the function value of the ``solution'' selected by the algorithm after a finite number of function evaluations. BO
 aims at finding such a solution of small simple regret while  minimizing at the same
@@ -128,7 +128,7 @@ gradient or Hessian. For this, BO maintains a \emph{probabilistic model} for
 $f(\mathbf{x})$, typically a Gaussian process \citep[GP,][]{rasmussen_gaussian_2006}, and uses this model for deciding
 at which $\mathbf{x}_{n+1}$ the function $f$ will be evaluated next.
 
-Assume we have already observed $n$ datapoints $\mathcal{D}_n=\{(\mathbf{x}_i,
+Assume we have already queried $n$ datapoints and observed their (noisy) function values $\mathcal{D}_n=\{(\mathbf{x}_i,
 y_i)\}_{i=1}^n$. The choice of the next query point $\mathbf{x}_{n+1}$ is based
 on a utility function over the GP posterior, the so-called \emph{acquisition
 function} $a: \mathcal X \to \mathbb{R}$, via $\mathbf{x}_{n+1}=
@@ -151,7 +151,7 @@ standard deviation of the GP at $\mathbf{x}$, respectively.
 The second class of acquisition functions are \emph{improvement-based policies}, such as the probability of improvement \citep[PI,][]{kushner_new_1964} over the current best value, which can be calculated in closed-form for a GP model:
 $$a_{PI}(\mathbf{x}; \mathcal{D}_n) := \mathbb{P}[f(\mathbf{x}) > \tau] = \Phi(\gamma(\mathbf{x})),$$
 where $\gamma(x) = (\mu_n(\mathbf{x}) - \tau) / \sigma_n(x)$, $\Phi(\cdot)$ denotes the cumulative distribution function of the
-standard Gaussian, and $\tau$ denotes the incumbent, typically the best function value observed so far: $\tau = \max y_i$.
+standard Gaussian, and $\tau$ denotes the incumbent, typically the best function value observed so far: $\tau = \max_i y_i$.
 Since PI is known to exploit quite aggressively \cite{jones_taxonomy_2001}, a more popular
 alternative is the \emph{expected improvement} \citep[EI,][]{mockus_application_1978} over the
 current best value, which can again be computed in closed form for a GP model:
@@ -207,9 +207,9 @@ $\pi_{u}$. For generalizing learned policies to multiple tasks,
 the task is characterized
 by a context vector $\mathbf{s}$ and the upper-level policy
 $\pi_{u}(\mathbf{\theta}\vert \mathbf{s})$ is conditioned on the respective
-context. The objective of CPS is to learn
+context. The objective of CPS is to learn the upper-level policy
 $\pi_{u}$ such that the expected return $J$ over all contexts is
-maximized, with $J = \int_s p(\mathbf{s}) \int_\mathbf{\theta}
+maximized, where $J = \int_s p(\mathbf{s}) \int_\mathbf{\theta}
 \pi_{u}(\mathbf{\theta}\vert \mathbf{s}) R(\mathbf{\theta}, \mathbf{s}) \D{\mathbf{\theta}
 } \D{\mathbf{s}}$. Here, $p(\mathbf{s})$ is the distribution over contexts and
 $R(\mathbf{\theta}, \mathbf{s})$ is the expected return when executing the low
@@ -219,14 +219,14 @@ search approaches in robotics.
 
 \section{MINIMUM REGRET SEARCH} \label{Section:MRS}
 
-While information-based policies for Bayesian optimization such as ES and PES
-have performed very well empirically, we discuss in Section \ref{Section:MRS_Illustration} 
-that their internal objective of minimizing
+Information-based policies for Bayesian optimization such as ES and PES
+have performed well empirically. However, as we discuss in Section \ref{Section:MRS_Illustration},
+their internal objective of minimizing
 the uncertainty in the location of the optimizer $\mathbf{x}^\star$, i.e.,
 minimizing the differential entropy of $p_\star$, is actually different (albeit
-related) to the common external objective of minimizing the simple regret of
+related) to the common external objective of minimizing the \emph{simple regret} of
 $\mathbf{\tilde x}_N$, the recommendation of BO for $\mathbf{x}^\star$ after $N$
-trials, where we define the simple regret of $\mathbf{\tilde x}_N$ as
+trials. We define the simple regret of $\mathbf{\tilde x}_N$ as
 $R_f(\mathbf{\tilde  x}_N) = f(\mathbf{x}^\star) - f(\mathbf{\tilde  x}_N) = \max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{\tilde x}_N)$.
 
 Clearly, $\mathbf{x}^\star$ has zero and thus minimum simple regret, but a query that
@@ -248,9 +248,9 @@ selecting parameter $\mathbf{x}$ under $p(f)$ as follows:
 $$\text{ER}(p)(\mathbf{x}) = \mathbb{E}_{p(f)}[R_f(\mathbf{x})]
 = \mathbb{E}_{p(f)}[\max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{
 x})]$$
-The minimizer $\mathbf{\tilde x}$ of the expected simple regret under fixed $p(f)$ can be determined efficiently in the case of a GP since it is identical to the maximizer of the GP's mean $\mu_N(\mathbf{x})$. However, in general, $p(f)$ depends on data and it is desirable to select the data such that $\text{ER}$ is also minimized with regard to the resulting $p(f)$.
+The minimizer $\mathbf{\tilde x}$ of the expected simple regret under fixed $p(f)$ can be approximated efficiently in the case of a GP since it is identical to the maximizer of the GP's mean $\mu_N(\mathbf{x})$. However, in general, $p(f)$ depends on data and it is desirable to select the data such that $\text{ER}$ is also minimized with regard to the resulting $p(f)$.
 
-In $N$-step minimum regret search (MRS), we are given a budget of $N$ function evaluations and are to choose a sequence of $N$ query points
+In $N$-step Bayesian optimization, we are given a budget of $N$ function evaluations and are to choose a sequence of $N$ query points
 $X^q_N=\{\mathbf{x}^q_1, \dots, \mathbf{x}^q_N\}$ for which we evaluate $y_n = f(\mathbf{x}^q_n) +
 \epsilon$ to obtain $\mathcal{D}_N = \{\mathbf{x}^q_n, y_n\}_{n=1}^N$. Based on this, MRS
 estimates $p_N(f) = p(f \vert \mathcal{D}_N)$  and recommends parameters
@@ -259,7 +259,7 @@ expected regret under $p_N$ is minimized, i.e., $\mathbf{\tilde x}_N = \arg\min_
 \text{ER}(p_N)(\mathbf{x})$.
  In general, we are interested in choosing a
 sequence $X^q_N$ such that we minimize
-$\text{ER}(p_N)(\mathbf{\tilde x}_N)$ with respect to the resulting $p_N$ (note that both $p_N$ and $\mathbf{\tilde x}_N$ depend on $X^q_N$).
+$\min_\mathbf{x} \text{ER}(p_N)(\mathbf{x})$ with respect to the resulting $p_N$.
 
 As choosing the optimal sequence $X^q_N$ at once is intractable, we follow the
 common approach in BO and select $\mathbf{x}^q_n$
@@ -292,7 +292,7 @@ The next query point $\mathbf{x}^q_{n+1}$ would thus be selected as the maximize
 $a_{\text{MRS}^{\text{point}}}$.
 
 One potential drawback of MRS$^{\text{point}}$, however,  is that it does not account for
-the inherent uncertainty about $\mathbf{\tilde x}_N$. Alternatively, we propose using
+the inherent uncertainty about $\mathbf{\tilde x}_N$. To address this shortcoming, we propose using
 the measure $p^\star_{\mathcal{D}_n} = p^\star(\mathbf{x} \vert \mathcal{D}_n)$ as defined in
 entropy search (see Section \ref{Section:Background}) as proxy for $\mathbf{\tilde x}_N$.
 %Let us denote the corresponding measure on $p^{[\mathbf{x}^q, y]}_n(f)$ by
@@ -309,7 +309,7 @@ a_{\text{MRS}}(\mathbf{x}^q)
 \end{equation*}
 
 MRS can thus be seen as a more Bayesian treatment, where we marginalize our
-uncertainty about $\mathbf{\tilde x}_N$, while MRS$^\text{points}$ is more akin
+uncertainty about $\mathbf{\tilde x}_N$, while MRS$^\text{point}$ is more akin
 to a point-estimate since we use a single point (the minimizer of the expected simple regret)
 as proxy for $\mathbf{\tilde x}_N$.
 
@@ -383,7 +383,7 @@ $p^\star$ into account, its acquisition surface is smoother in general; in parti
 \approx 3.0$, which do not cause regret for $\mathbf{\tilde x} = 1.5$ but for
 alternative choices such as $\mathbf{\tilde x} = 4.0$.
 
-Why does ES not assign a large acquisition value to $\mathbf{x}^q \geq 3.0$?
+Why does ES not assign a large acquisition value to query points $\mathbf{x}^q \geq 3.0$?
 This is because ES does not take into account the correlation of different
 (representer) points under $p(f)$. This, however, would be desirable as, e.g.,
 reducing uncertainty regarding optimality among two highly correlated points
@@ -496,8 +496,8 @@ algorithm's recommendation for the optimum after $N$ queries but not in the
 quality of the queries themselves:  according to the
 median of the simple regret (top left), ES, MRS, and MRS$^{point}$ perform
 nearly identical, while EI is about an order of magnitude worse. GP-UCB performs
-even worse initially but surpasses EI eventually\footnote{GP-UCB reaches 
-the same level of mean and median simple regret  as MRS after $N=200$ steps 
+even worse initially but surpasses EI eventually\footnote{GP-UCB would reach 
+the same level of mean and median simple regret as MRS eventually after $N=200$ steps 
 (in mean and median) with no significant difference  according to a Wilcoxon signed-rank test.}. 
 PI performs the worst as it
 exploits too aggressively. These results are roughly in correspondence with prior
@@ -589,11 +589,11 @@ a Wilcoxon signed-rank test). A potential reason for this might be the increasin
 \section{DISCUSSION AND CONCLUSION}
 
 We have proposed MRS, a new class of acquisition functions for single- and multi-task
-Bayesian optimization that is based on the principle of minimizing the expected
+Bayesian optimization that is based on the principle of minimizing the expected simple
 regret. We have compared MRS empirically to other acquisition functions on a
 synthetic single-task optimization problem and a simulated multi-task robotic
 control problem.  The results indicate that MRS performs favorably compared to the
-other approaches and incurs less often a high regret than ES since its
+other approaches and incurs less often a high simple regret than ES since its
 objective is explicitly focused on minimizing the regret. An empirical
 comparison with PES remains future work; since PES uses the same objective as ES
 (minimizing $H(\mathbf{x}^\star)$), it will likely show the same deficit of
