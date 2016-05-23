@@ -2,7 +2,6 @@
 
 \usepackage{hyperref}
 \usepackage{url}
-%\documentstyle[nips14submit_09,times,art10]{article} % For LaTeX 2.09
 
 \usepackage{graphicx}
 
@@ -38,7 +37,7 @@
 % package.
 \icmlauthor{Jan Hendrik Metzen}{janmetzen@mailbox.org}
 \icmladdress{Universit{\"a}t Bremen, 28359 Bremen, Germany \\
-             Corporate Research, Robert Bosch GmbH, 70442 Stuttgart, Germany}
+			 Corporate Research, Robert Bosch GmbH, 70442 Stuttgart, Germany}
 %\icmlauthor{Your CoAuthor's Name}{email@coauthordomain.edu}
 %\icmladdress{Their Fantastic Institute,
 %            27182 Exp St., Toronto, ON M6H 2T1 CANADA}
@@ -152,16 +151,11 @@ The second class of acquisition functions are \emph{improvement-based policies},
 $$a_{PI}(\mathbf{x}; \mathcal{D}_n) := \mathbb{P}[f(\mathbf{x}) > \tau] = \Phi(\gamma(\mathbf{x})),$$
 where $\gamma(x) = (\mu_n(\mathbf{x}) - \tau) / \sigma_n(x)$, $\Phi(\cdot)$ denotes the cumulative distribution function of the
 standard Gaussian, and $\tau$ denotes the incumbent, typically the best function value observed so far: $\tau = \max_i y_i$.
-Since PI is known to exploit quite aggressively \cite{jones_taxonomy_2001}, a more popular
+Since PI exploits quite aggressively \cite{jones_taxonomy_2001}, a more popular
 alternative is the \emph{expected improvement} \citep[EI,][]{mockus_application_1978} over the
-current best value, which can again be computed in closed form for a GP model:
-\begin{equation*}
-\begin{split}
- a_{EI}(\mathbf{x}; \mathcal{D})
-  & := \mathbb{E}[(f(x) - \tau)\mathbb{I}(f(x) > \tau)] \\
-  &  = \sigma_n(\mathbf{x})\left(\gamma(\mathbf{x})\Phi(\gamma(\mathbf{x})) + \phi(\gamma(\mathbf{x}))\right),
-\end{split}
-\end{equation*}
+current best value $ a_{EI}(\mathbf{x}; \mathcal{D}) := \mathbb{E}[(f(x) - \tau)\mathbb{I}(f(x) > \tau)]$, which can again be computed in closed form for a GP model as
+$a_{EI}(\mathbf{x}; \mathcal{D})
+  = \sigma_n(\mathbf{x})\left(\gamma(\mathbf{x})\Phi(\gamma(\mathbf{x})) + \phi(\gamma(\mathbf{x}))\right)$,
 where $\phi(\cdot)$ denotes the standard Gaussian density function.  A
 generalization of EI is the \emph{knowledge gradient} factor \cite
 {frazier_knowledge-gradient_2009}, which can better handle noisy observations,
@@ -178,7 +172,7 @@ results in the maximal reduction in the differential entropy of $p^\star$. More
 formally, the entropy search acquisition function is defined as
 $$ a_{ES}(\mathbf{x}, \mathcal{D}_n)
   = H(\mathbf{x}^\star \vert \mathcal{D}_n) - \mathbb{E}_{y \vert \mathbf{x}, \mathcal{D}_n}
-    [H(\mathbf{x}^\star \vert \mathcal{D}_n \cup \{(\mathbf{x}, y))],$$
+	[H(\mathbf{x}^\star \vert \mathcal{D}_n \cup \{(\mathbf{x}, y))],$$
 where $H(\mathbf{x}^\star \vert \mathcal{D}_n)$ denotes the differential entropy
 of $p^\star(x \vert \mathcal{D}_n)$ and the expectation is with respect to the
 predictive distribution of the GP at $\mathbf{x}$, which is a normal
@@ -193,7 +187,7 @@ alternative formulation is obtained by exploiting the symmetric property of the
 mutual information, which allows rewriting the ES acquisition function as
 $$ a_{PES}(\mathbf{x}, \mathcal{D}_n)
   = H(y \vert \mathcal{D}_n, \mathbf{x}) - \mathbb{E}_{\mathbf{x}^\star \vert \mathcal{D}_n}
-    [H(y \vert \mathcal{D}_n, \mathbf{x}, \mathbf{x}^\star)].$$
+	[H(y \vert \mathcal{D}_n, \mathbf{x}, \mathbf{x}^\star)].$$
 This acquisition function is known as predictive entropy search
 \citep[PES,][]{hernandez-lobato_predictive_2014}. PES does not require discretization
 and allows a formal treatment of GP hyperparameters.
@@ -284,8 +278,8 @@ $\mathbf{x}^q$, i.e.,
 \begin{equation*}
 \begin{split}
 a_{\text{MRS}^{\text{point}}}(\mathbf{x}^q)
-    & = \min_{\mathbf{\tilde x}}\text{ER}(p_n)(\mathbf{\tilde x}) \\
-     &- \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[\min_{\mathbf{\tilde x}}  \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})],
+	& = \min_{\mathbf{\tilde x}}\text{ER}(p_n)(\mathbf{\tilde x}) \\
+	 &- \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[\min_{\mathbf{\tilde x}}  \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})],
 \end{split}
 \end{equation*}
 where the expectation is with
@@ -305,9 +299,9 @@ We denote the resulting acquisition function by MRS and define it analogously to
 \begin{split}
 a_{\text{MRS}}(\mathbf{x}^q)
    & = \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_n}[\text{ER}(p_n)(\mathbf{\tilde x})] \\
-      & - \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[
-          \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_{\mathcal{D}_n \cup \{(\mathbf{x}^q, y)\}}}[
-             \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})]].
+	  & - \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[
+		  \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_{\mathcal{D}_n \cup \{(\mathbf{x}^q, y)\}}}[
+			 \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})]].
 \end{split}
 \end{equation*}
 
