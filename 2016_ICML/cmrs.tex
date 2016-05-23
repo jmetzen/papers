@@ -171,16 +171,16 @@ defining a set $A_n$ from which one would choose the final solution.
 The third class of acquisition functions are \emph{information-based policies},
 which entail Thompson sampling and entropy search
 \citep[ES,][]{villemonteix_informational_2008, hennig_entropy_2012,hernandez-lobato_predictive_2014}.
-Let $p_\star(x \vert \mathcal{D}_n)$ denote the
+Let $p^\star(x \vert \mathcal{D}_n)$ denote the
 posterior distribution of the unknown optimizer $\mathbf{x}^\star = \arg\max_{\mathbf{x} \in \mathcal{X}} f(\mathbf{x})$  after
 observing $\mathcal{D}_n$. The objective of ES is to select the query point that
-results in the maximal reduction in the differential entropy of $p_\star$. More
+results in the maximal reduction in the differential entropy of $p^\star$. More
 formally, the entropy search acquisition function is defined as
 $$ a_{ES}(\mathbf{x}, \mathcal{D}_n)
   = H(\mathbf{x}^\star \vert \mathcal{D}_n) - \mathbb{E}_{y \vert \mathbf{x}, \mathcal{D}_n}
     [H(\mathbf{x}^\star \vert \mathcal{D}_n \cup \{(\mathbf{x}, y))],$$
 where $H(\mathbf{x}^\star \vert \mathcal{D}_n)$ denotes the differential entropy
-of $p_\star(x \vert \mathcal{D}_n)$ and the expectation is with respect to the
+of $p^\star(x \vert \mathcal{D}_n)$ and the expectation is with respect to the
 predictive distribution of the GP at $\mathbf{x}$, which is a normal
 distribution $y \sim \mathcal{N}(\mu_{n}(\mathbf{x}), \sigma_{n}^2(\mathbf{x}) +
 \sigma^2)$. Computing $a_{ES}$ directly is intractable for continuous spaces
@@ -188,7 +188,7 @@ $\mathcal{X}$; prior work has discretized $\mathcal{X}$ and used either Monte
 Carlo sampling \cite{villemonteix_informational_2008} or expectation propagation
 \cite{hennig_entropy_2012}. While the former may require many Monte Carlo
 samples to reduce variance, the latter incurs a run time that is quartic in the
-number of representer points used in the discretization of $p_\star$. An
+number of representer points used in the discretization of $p^\star$. An
 alternative formulation is obtained by exploiting the symmetric property of the
 mutual information, which allows rewriting the ES acquisition function as
 $$ a_{PES}(\mathbf{x}, \mathcal{D}_n)
@@ -223,7 +223,7 @@ Information-based policies for Bayesian optimization such as ES and PES
 have performed well empirically. However, as we discuss in Section \ref{Section:MRS_Illustration},
 their internal objective of minimizing
 the uncertainty in the location of the optimizer $\mathbf{x}^\star$, i.e.,
-minimizing the differential entropy of $p_\star$, is actually different (albeit
+minimizing the differential entropy of $p^\star$, is actually different (albeit
 related) to the common external objective of minimizing the \emph{simple regret} of
 $\mathbf{\tilde x}_N$, the recommendation of BO for $\mathbf{x}^\star$ after $N$
 trials. We define the simple regret of $\mathbf{\tilde x}_N$ as
@@ -459,7 +459,7 @@ we conduct a similar analysis as \citet[Section
 single-task functions sampled from a generative model, namely from the same GP-based model
 that is used by the optimization internally as surrogate model. This precludes
 model-mismatch issues and unwanted bias which could be introduced by resorting
-to common hand-crafted test functions. More specifically, we choose the
+to common hand-crafted test functions\footnote{Please refer to the supplementary material for an analogous experiment with model-mismatch.}. More specifically, we choose the
 parameter space to be the 2-dimensional unit domain $\mathcal{X} = [0, 1]^2$ and generate test
 functions by sampling $250$ function values jointly from a GP with an isotropic RBF kernel
 of length scale $l = 0.1$ and unit signal variance. A GP is
@@ -530,7 +530,6 @@ simple regret (see Section \ref{Section:MRS_Illustration}). Accordingly, MRS is 
 acquisition functions that perform well both according to the median and the
 mean simple regret; moreover, MRS performs slightly better than
 MRS$^{point}$ and we will focus on MRS subsequently.
-
 
 
 \subsection{Multi-Task Robotic Behavior Learning} \label{Section:ResultsMultiTask}
@@ -616,6 +615,10 @@ This work was supported through two grants of the German Federal Ministry of Eco
 
 \bibliographystyle{icml2016}
 \bibliography{literature}
+
+%\newpage
+%\appendix 
+%\input{appendix.tex}
 
 
 \end{document}
