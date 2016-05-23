@@ -453,7 +453,7 @@ we conduct a similar analysis as \citet[Section
 single-task functions sampled from a generative model, namely from the same GP-based model
 that is used by the optimization internally as surrogate model. This precludes
 model-mismatch issues and unwanted bias which could be introduced by resorting
-to common hand-crafted test functions\footnote{Please refer to the supplementary material for an analogous experiment with model-mismatch.}. More specifically, we choose the
+to common hand-crafted test functions\footnote{Please refer to the Appendix \ref{section:exp_model_mismatch} for an analogous experiment with model-mismatch.}. More specifically, we choose the
 parameter space to be the 2-dimensional unit domain $\mathcal{X} = [0, 1]^2$ and generate test
 functions by sampling $250$ function values jointly from a GP with an isotropic RBF kernel
 of length scale $l = 0.1$ and unit signal variance. A GP is
@@ -610,9 +610,9 @@ This work was supported through two grants of the German Federal Ministry of Eco
 \bibliographystyle{icml2016}
 \bibliography{literature}
 
-%\newpage
-%\appendix 
-%\input{appendix.tex}
+\newpage
+\appendix 
+\input{appendix.tex}
 
 
 \end{document}
