@@ -1,0 +1,11 @@
+%DEFINE A FOR LOOP
+\newcommand{\posterforloop}[5][1]
+{%
+\setcounter{#2}{#3}%
+\ifthenelse{#4}%
+{#5%
+	\addtocounter{#2}{#1}%
+	\posterforloop[#1]{#2}{\value{#2}}{#4}{#5}%
+}%
+{}%else
+}

@@ -1,0 +1,41 @@
+%add logos
+\newlength{\sponsorpos}
+\setlength{\sponsorpos}{50cm}
+\newcounter{sponsorlogo}
+\setcounter{sponsorlogo}{0}
+
+\newlength{\partnerpos}
+%\setlength{\partnerpos}{32cm}52.8cm
+\setlength{\partnerpos}{66cm}
+\newcounter{partnerlogo}
+\setcounter{partnerlogo}{0}
+
+\newcommand{\sponsorlogo}[2]{
+	\define@key{sponsor}{logo\thesponsorlogo}[default]{
+		\addtolength{\sponsorpos}{-#1}
+		\pgfdeclareimage[width=#1]{logo\thesponsorlogo}{#2}
+		\pgfputat{\pgfpoint{\sponsorpos}{5cm}}{\pgfbox[left,center]{\pgfuseimage{logo\thesponsorlogo}}}
+		%\addtolength{\sponsorpos}{#1}
+		\addtolength{\sponsorpos}{-2cm}
+	}
+	\addtocounter{sponsorlogo}{1}
+}
+
+\newcommand{\partnerlogo}[2]{
+	\define@key{partner}{partner\thepartnerlogo}[default]{
+		\addtolength{\partnerpos}{-#1}
+		\pgfdeclareimage[width=#1]{partner\thepartnerlogo}{#2}
+		\pgfputat{\pgfpoint{\partnerpos}{0cm}}{\pgfbox[left,base]{\pgfuseimage{partner\thepartnerlogo}}}
+		\addtolength{\partnerpos}{-2cm}
+	}
+	\addtocounter{partnerlogo}{1}
+}
+
+\newcounter{posteri}
+\newcommand{\printsponsorlogos}[0]{
+	\posterforloop{posteri}{0}{\value{posteri} < \value{sponsorlogo}}{\setkeys{sponsor}{logo\theposteri}}
+}
+
+\newcommand{\printpartnerlogos}[0]{
+	\posterforloop{posteri}{0}{\value{posteri} < \value{partnerlogo}}{\setkeys{partner}{partner\theposteri}}
+}

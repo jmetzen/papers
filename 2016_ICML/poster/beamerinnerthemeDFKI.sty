@@ -1,0 +1,96 @@
+% Copyright 2007 by Till Tantau
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%
+% See the file doc/licenses/LICENSE for more details.
+
+%\ProvidesPackageRCS $Header: /cvsroot/latex-beamer/latex-beamer/themes/inner/beamerinnerthemecircles.sty,v 1.4 2007/01/28 20:48:30 tantau Exp $
+
+\ProvidesPackage{beamerinnerthemeDFKI}
+
+%overwrite items
+%circle template, bur a sqare
+\defbeamertemplate{itemize item}{DFKI}{\raisebox{.25ex}{{\hbox{\textbullet}}}}
+%\defbeamertemplate{itemize item}{DFKI}{\hbox{\textbullet}}
+\defbeamertemplate{itemize subitem}{DFKI}{\raisebox{.25ex}{\hbox{\vrule width 1ex height 1ex}}}
+\defbeamertemplate{itemize subsubitem}{DFKI}{\raisebox{.25ex}{\hbox{\textbullet}}}
+
+% Itemize items, circle (/latex-beamer-3.07/base/beamerbaseauxtemplates)
+
+%\defbeamertemplate{itemize item}{circle}{\small\raise0.5pt\hbox{\textbullet}}
+%\defbeamertemplate{itemize subitem}{circle}{\footnotesize\raise0.5pt\hbox{\textbullet}}
+%\defbeamertemplate{itemize subsubitem}{circle}{\footnotesize\raise0.5pt\hbox{\textbullet}}
+
+% Itemize items, square
+
+%\defbeamertemplate{itemize item}{square}{\hbox{\vrule width 1ex height 1ex}}
+%\defbeamertemplate{itemize subitem}{square}{\small\hbox{\vrule width 1ex height 1ex}}
+%\defbeamertemplate{itemize subsubitem}{square}{\small\hbox{\vrule width 1ex height 1ex}}
+
+
+
+\defbeamertemplate{enumerate item}{DFKI}
+{
+  \usebeamerfont*{item projected}%
+  \usebeamercolor[bg]{item projected}%
+  \raisebox{.5ex}{
+  \begin{pgfpicture}{0ex}{0ex}{1ex}{1ex}
+    \pgfpathcircle{\pgfpoint{.5ex}{.75ex}}{.75ex}
+    \pgfusepath{fill}
+    \pgftext[base,x=.5ex]{\color{fg}\raisebox{.125ex}{\tiny\insertenumlabel}}
+  \end{pgfpicture}%
+}
+}
+[action]
+{\setbeamerfont{item projected}{size=\scriptsize}}
+
+\defbeamertemplate{enumerate subitem}{DFKI}
+{
+  \raisebox{.5ex}{%
+    \usebeamerfont*{subitem projected}%
+    \usebeamercolor[bg]{subitem projected}%
+    \vrule width1.2ex height1.2ex depth0ex%
+    \hskip-1.2ex%
+    \hbox to1.2ex{%
+      \hfil%
+      \color{fg}\tiny\insertsubenumlabel%
+      \hfil}%
+}%
+}
+
+\defbeamertemplate{enumerate subsubitem}{DFKI}
+{
+  \usebeamerfont*{subsubitem projected}%
+  \usebeamercolor[bg]{subsubitem projected}%
+  \raisebox{.25ex}{
+  \begin{pgfpicture}{0ex}{0ex}{1ex}{1ex}
+    \pgfpathcircle{\pgfpoint{0pt}{.75ex}}{.75ex}
+    \pgfusepath{fill}
+    \pgftext[base]{\color{fg}\raisebox{.125ex}{\tiny\insertsubsubenumlabel}}
+  \end{pgfpicture}%
+}
+}
+
+\defbeamertemplate{enumerate mini template}{DFKI}
+{
+  \usebeamerfont*{\beameritemnestingprefix item projected}%
+  \usebeamercolor[bg]{\beameritemnestingprefix item projected}%
+  \raisebox{.25ex}{
+  \begin{pgfpicture}{-1ex}{0ex}{1ex}{2ex}
+    \pgfpathcircle{\pgfpoint{0pt}{.75ex}}{1.2ex}
+    \pgfusepath{fill}
+    \pgftext[base]{\color{fg}\insertenumlabel}
+  \end{pgfpicture}%
+}
+}
+
+\mode<presentation>
+
+\setbeamertemplate{items}[DFKI]
+\setbeamertemplate{sections/subsections in toc}[circle]
+
+\mode
+<all>

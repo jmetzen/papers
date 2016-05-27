@@ -1,0 +1,15 @@
+
+\pgfdeclareimage[height=4.8cm]{dfki-logo}{./defines/DFKI_Schrift}
+
+\setbeamertemplate{headline}
+{%
+  \setbeamercolor{mycolor}{fg=black,bg=white}
+   \begin{beamercolorbox}{mycolor}
+    \centering{\parbox{70cm}{\centering{\huge{\textbf{\inserttitle}}}}}\\[5mm]
+    \centering{\parbox{70cm}{\centering{\Large{\insertauthor\\[.5cm] University Bremen,
+Robotics Research Group, Robert-Hooke-Str.~1, 28359 Bremen,
+Germany\hspace{2cm}}}}}
+
+  \end{beamercolorbox}%
+  \vspace{-6cm}
+}

@@ -1,0 +1,35 @@
+
+\pgfdeclareimage[width=250mm]{uni-bremen-logo}{./defines/logo_4c}
+
+\setbeamertemplate{footline}
+{%
+  \begin{beamercolorbox}{section in head/foot}
+
+    \begin{pgfpicture}{0cm}{0cm}{0cm}{0cm}
+	{ \color{DFKIgray}
+\pgfrect[fill]{\pgfpoint{0cm}{0cm}}{\pgfpoint{54cm}{9cm}} }
+	{ \color{DFKIgray}
+\pgfrect[fill]{\pgfpoint{54cm}{0cm}}{\pgfpoint{70cm}{2cm}}}
+
+	%the logo pdf file is somehow strange, so the y coord is -4cm
+	\pgfputat{\pgfpoint{1cm}{-4cm}}{\pgfbox[left,base]{\pgfuseimage{uni-bremen-logo}}}
+
+	\printsponsorlogos
+
+	\pgfputat{\pgfpoint{30cm}{2.5cm}}{\pgfbox[left,center]{
+	\ricsize{\textbf{{Robotics Innovation Center}}}}}
+
+        \pgfputat{\pgfpoint{55cm}{5.5cm}}{\pgfbox[left,center]{
+        \parbox{20cm}{
+        \large
+        \textbf{Contact:}\\[2mm]
+        Jan Hendrik Metzen \\[2mm]
+        University Bremen, Robotics Group\\[2mm]
+				Director: Prof.~Dr.~Frank Kirchner\\[2mm]
+				\url{www.dfki.de/robotics}\\[2mm]
+				\url{jhm@informatik.uni-bremen.de}}
+		}}
+    \end{pgfpicture}
+
+    \end{beamercolorbox}%}
+}

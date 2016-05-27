@@ -1,0 +1,78 @@
+\documentclass{beamer}
+\usepackage{dfkiposter}
+
+\usepackage{url}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc,backgrounds,fit}
+
+% For algorithms
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+%\algsetup{indent=1cm}
+
+\usepackage{multicol}
+
+\newcommand{\ricsize}{\fontsize{22}{24}\selectfont}
+
+\newcounter{blockcounter}
+\setcounter{blockcounter}{1}
+
+\newcommand{\maincolor}{red}
+
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\emph}{\textbf}
+
+\usepackage{ragged2e}
+
+\newcommand*\mycirc[1]{%
+  \begin{tikzpicture}
+    \node[draw=gray,line width=4pt, circle,inner sep=4pt] {#1};
+  \end{tikzpicture}}
+
+\newcommand{\blocktitle}[1]{%
+\color{\maincolor} {\LARGE \mycirc{\theblockcounter} } \raisebox{.45cm}{\LARGE
+#1}
+\addtocounter{blockcounter}{1}
+}
+
+\newcommand{\blocksepline}[0]{
+  \begin{center}
+  \color{\maincolor}
+  \linethickness{2pt}
+  \line(1,0){850}
+  \end{center}
+}
+
+% Definitions of handy macros can go here
+\usepackage{xspace}
+
+\sponsorlogo{20cm}{defines/DFKI_Schrift}
+
+\title{Active Contextual Entropy Search}
+\author{Jan Hendrik Metzen}
+
+\begin{document}
+
+\begin{frame}
+
+\begin{columns}[t]
+\begin{column}{.48\textwidth}
+\input{content/left_column.tex}
+\end{column}
+
+\begin{column}{4pt}
+\begin{center}
+\color{\maincolor}
+\linethickness{2pt}
+\line(0,1){2360}
+\end{center}
+\end{column}
+
+\begin{column}{.48\textwidth}
+\input{content/right_column.tex}
+\end{column}
+\end{columns}
+\end{frame}
+
+\end{document}

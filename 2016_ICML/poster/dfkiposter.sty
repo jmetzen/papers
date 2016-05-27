@@ -1,0 +1,48 @@
+% AUTHOR: Tobias Quintern <quintern@informatik.uni-bremen.de>
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{dfkiposter}[2008/07/16]
+
+\usepackage{pgf}
+\usepackage{pgfbaseimage}
+\usepackage{xkeyval}
+\usepackage{ifthen}
+\usepackage{graphicx}
+\usepackage[latin1]{inputenc}
+
+\setbeamercovered{transparent}
+
+\newcommand{\secHead}[1]{\vspace*{1ex}\textbf{{\large#1}\\}\vspace*{1ex}}
+\newcommand{\subsecHead}[1]{\vspace*{1ex}\textbf{#1\\}\vspace*{1ex}}
+
+
+%\definecolor{DFKIgray}{cmyk}{0,0,0.07,0.06}
+\definecolor{DFKIgray}{RGB}{237,237,238}
+
+
+\beamertemplatenavigationsymbolsempty
+
+%\usepackage[orientation=portrait,size=a0,scale=1.4,debug]{beamerposter}   % e.g. for DIN-A0 poster
+\usepackage[size=b1, orientation=portrait]{beamerposter} %for dfki poster
+
+\usecolortheme{DFKI}
+\useinnertheme{DFKI}
+
+
+\setbeamertemplate{caption}[numbered]
+
+%margins around the text
+\setbeamersize{text margin left=4cm}
+\setbeamersize{text margin right=4cm}
+
+
+\input{defines/forloop}
+\input{defines/logos}
+\input{defines/boxes}
+\input{defines/header}
+\input{defines/footer}
+
+
+
+
+
