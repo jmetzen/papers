@@ -39,11 +39,21 @@
 
 \begin{figure}
 \centering
-%\includegraphics[width=0.3\textwidth,clip=true,trim=200 120 250 100]{pics/compi}
-%\includegraphics[width=0.58\textwidth]{../pics/learning_curve}
-%\includegraphics[width=0.4\textwidth]{../pics/context_selection}
-\caption{(Left) Learning curves on the simulated robot arm COMPI: the offline performance is evaluated each 10 episodes on 16 test contexts distributed on a grid over the target area. Mean and its standard error over 20 independent runs. (Right) Scatter plot showing the sampled contexts for all (blue) and a single representative run (red).}
-\label{fig:experiment}
+\includegraphics[width=.9\columnwidth]{../pics/empirical_comparison} \\
+\includegraphics[width=.9\columnwidth]{../pics/hist}
+\caption{(Top) Median and mean simple regret over $250$ repetitions for different acquisition functions. Shown is the simple regret of the recommendation $\mathbf{\tilde x}_N$ after $N$ trials, i.e., the point which maximizes the GP posterior
+mean. (Bottom) Histogram of the simple regret after performing $N=100$ trials for different acquisition functions (note the log-scales).}
+\label{fig:empirical_comparison}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=.9\textwidth]{../pics/es_analysis}
+\caption{Illustration of acquisition functions on a target function for
+100 given samples and 25 representer points; darker areas correspond to larger values. ES focuses on sampling in areas with high density of $p^\star$ (many representer points), while MRS focuses on unexplored areas that are populated by representer points (non-zero $p^\star$).
+}
+\label{fig:es_analysis}
 \end{figure}
 
 \end{center}
