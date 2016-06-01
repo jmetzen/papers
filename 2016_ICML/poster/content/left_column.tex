@@ -16,23 +16,31 @@ simulated multi-task robotic control problem.
 \begin{block}{\blocktitle{Background}}
 \textbf{Bayesian optimization} \cite{shahriari_taking_2016}:
 \begin{itemize}
-\item aims at black-box optimization problems $\mathbf{x} = \arg\min_{\mathbf{x} \in \mathcal{X}} f(x)$ of some function $f: \mathcal{X} \to \mathbb{R}$ on some bounded set $\mathcal{X} \subset \mathbb{R}^D$.
-\item maintains a \emph{probabilistic model} for $f(\mathbf{x})$, typically a Gaussian process (GP)
+\item black-box optimization problems $\mathbf{x} = \arg\min_{\mathbf{x} \in \mathcal{X}} f(x)$ of some function $f: \mathcal{X} \to \mathbb{R}$ on some bounded set $\mathcal{X} \subset \mathbb{R}^D$.
+\item maintains a \emph{probabilistic model} $p(f)$ for $f(\mathbf{x})$, typically a Gaussian process (GP)
 \item decides on a query point $\mathbf{x}_{n+1}$ where $f$ will be evaluated next based on GP posterior of first $n$ observations $\mathcal{D}_n=\{(\mathbf{x}_i, y_i)\}_{i=1}^n$ and an \emph{acquisition function}
+\item recommends $\mathbf{\tilde x}_N$ after $N$ queries (optimum of GP or best query point)
+\item objective: minimize \emph{simple regret} 
+$R_f(\mathbf{\tilde  x}_N) = f(\mathbf{x}^\star) - f(\mathbf{\tilde  x}_N) = \max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{\tilde x}_N)$
 \end{itemize}
 
 Acquisition functions decide where to query next:
 \begin{itemize}
 \item Upper-Confidence Bound (UCB): $a_{UCB}(\mathbf{x};
 \mathcal{D}_n) = \mu_{n}(\mathbf{x}) + \kappa_n \sigma_{n}(\mathbf{x})$
+\item Probability of Improvement (PI): $a_{PI}(\mathbf{x}; \mathcal{D}_n) := \mathbb{P}[f(\mathbf{x}) > \tau]$
+\item Expected Improvement (EI): $a_{EI}(\mathbf{x}; \mathcal{D}_n) := \mathbb{E}[(f(x) - \tau)\mathbb{I}(f(x) > \tau)]$
+\item Entropy Search (ES) \cite{hennig_entropy_2012}: $a_{ES}(\mathbf{x}, \mathcal{D}_n)
+  = H(\mathbf{x}^\star \vert \mathcal{D}_n) - \mathbb{E}_{y \vert \mathbf{x}, \mathcal{D}_n}
+	[H(\mathbf{x}^\star \vert \mathcal{D}_n \cup \{(\mathbf{x}, y))]$,
+	where $H(\mathbf{x}^\star \vert \mathcal{D}_n)$ denotes the differential entropy
+of the posterior distribution $p^\star(x \vert \mathcal{D}_n)$ of the unknown optimizer $\mathbf{x}^\star = \arg\max_{\mathbf{x} \in \mathcal{X}} f(\mathbf{x})$.
 \end{itemize}
 
 \end{block}
 
 \begin{block}{\blocktitle{Minimum Regret Search}}
-\emph{Idea:} 
 
-Entropy Search (ES):
 \begin{itemize}
  \item estimate probability $p_{opt}(\theta)$ that the global optimum of unknown function $f$ is at $\theta$ at finitely many points $\{\theta^c\}_{i=1}^{N_\theta}$ and approximate using Monte Carlo integration
  \item predict the change of GP when drawing a sample at the query point
@@ -42,9 +50,10 @@ GP's predictive distribution at $\theta^q$
  distribution of the global optimum \emph{after} an assumed query at $\theta^q$.
 \end{itemize}
 
-Minimum Regret Search (MRS):
+Approximation:
 \begin{itemize}
  \item 
+ \item $n_f=1000$, $n_r=25$, and $n_y=51$
 \end{itemize}
 \end{block}
 
@@ -55,23 +64,7 @@ Minimum Regret Search (MRS):
 \centering
 \includegraphics[width=0.48\columnwidth]{../pics/regret_illustration}
 \includegraphics[width=0.48\columnwidth]{../pics/acq_comparison}
-\caption{(Left) Illustration of GP posterior, probability of maximum $p^\star$, expected regret ER, and  $\mathbb{E}[\max(f(\mathbf{x}) - f(1.5), 0)]$ (scale on the right-hand side). (Right) Illustration of GP posterior and different acquisition function. Absolute values have been normalized such that the mean value of an acquisition function is $0.5$. Best seen in color.}
+\caption{(Left) GP posterior, probability of maximum $p^\star$, expected regret ER, and  $\mathbb{E}[\max(f(\mathbf{x}) - f(1.5), 0)]$ (scale on right-hand side). (Right) GP posterior and different acquisition function. Absolute values have been normalized such that the mean value of acquisition function is $0.5$.}
 \label{fig:MRS_illustration}
 \end{figure}
-\end{block}
-
-\begin{block}{\blocktitle{Synthetic Single-Task Benchmark}}
-\begin{itemize}
- \item Comparison of different approaches for exploration
- \begin{enumerate}
-  \item Active contextual entropy search ($N_{nn} = 20$ and $N_{nn} = 1$)
-  \item BO-CPS + Entropy Search +  random context selection
-  \item BO-CPS + GP-UCB with $\kappa=5.0$ (``pure exploration'') + random context selection
-  \item Random parameter and context selection
- \end{enumerate}
- \item Entropy Search outperforms GP-UCB because UCB aggressively samples parameters at the boundaries (high uncertainty but low global information)
- \item ACES outperforms random context selection, in particular when $N_{nn} = 20$
- \item ACES\_20 tends to avoid performing trials at the boundaries of the context space
-\end{itemize}
-
 \end{block}
