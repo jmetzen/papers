@@ -9,8 +9,7 @@ such as entropy search (ES). However, while ES aims in each query at maximizing 
 information gain with respect to the global maximum, MRS aims at minimizing the
 expected simple regret of its ultimate recommendation for the optimum. While empirically ES and MRS perform similar in most of the
 cases, MRS produces fewer outliers with high simple regret than ES. We provide empirical
-results both for a synthetic single-task optimization problem as well as for a
-simulated multi-task robotic control problem.
+results for a synthetic single-task optimization problem.
 \end{block}
 
 \begin{block}{\blocktitle{Background}}
@@ -41,19 +40,37 @@ of the posterior distribution $p^\star(x \vert \mathcal{D}_n)$ of the unknown op
 
 \begin{block}{\blocktitle{Minimum Regret Search}}
 
+Minimum regret search (MRS): acquistion function based directly on external objective of minimizing simple regret
 \begin{itemize}
- \item estimate probability $p_{opt}(\theta)$ that the global optimum of unknown function $f$ is at $\theta$ at finitely many points $\{\theta^c\}_{i=1}^{N_\theta}$ and approximate using Monte Carlo integration
- \item predict the change of GP when drawing a sample at the query point
-$\theta^q$ and assuming $N_y$ different outcomes $\{y^{(i)}\}$ sampled from the
-GP's predictive distribution at $\theta^q$
- \item select query point that minimizes the average loss (maximizes the relative entropy) $\mathcal{L}(p_{opt}[\theta^q]) = - \int p_{opt}[\theta^q](\theta) \log \frac{p_{opt}[\theta^q](\theta)}{U_I(\theta)}, \text{d}\theta$,  where $p_{opt}[\theta^q]$ denotes the probability
- distribution of the global optimum \emph{after} an assumed query at $\theta^q$.
+ \item Expected simple regret: $\text{ER}(p)(\mathbf{x}) = \mathbb{E}_{p(f)}[R_f(\mathbf{x})]
+= \mathbb{E}_{p(f)}[\max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{
+x})]$
+ \item For fixed GP $p(f)$, $\arg\min_\mathbf{x} \text{ER}(p)(\mathbf{x})$ corresponds to the maximizer of the GP mean
+ \item MRS aims at selecting query points s.t. ER is minimized also with respect to resulting $p(f)$
+ \item Myopic choice: select next query point s.t. minimum ER is reduced the most (in expectation)
+ \item $a_{\text{MRS}^{\text{point}}}(\mathbf{x}^q)
+	= \min_{\mathbf{\tilde x}}\text{ER}(p_n)(\mathbf{\tilde x})
+	 - \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[\min_{\mathbf{\tilde x}}  \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})]$
+ \item Additionally also account for uncertainty in minimizer $\mathbf{\tilde x}$ of $\text{ER}$ yields MRS
+ \item $a_{\text{MRS}}(\mathbf{x}^q)
+    = \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_n}[\text{ER}(p_n)(\mathbf{\tilde x})] 
+	   - \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[
+		  \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_{\mathcal{D}_n \cup \{(\mathbf{x}^q, y)\}}}[
+			 \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})]]$
 \end{itemize}
 
-Approximation:
+Approximate $a_{\text{MRS}}$ based on sampling:
 \begin{itemize}
- \item 
- \item $n_f=1000$, $n_r=25$, and $n_y=51$
+ \item approximate $\mathbb{E}_{p(f)}$ by taking $n_f=1000$ Monte Carlo samples from $p(f)$
+ \item approximate $\mathbb{E}_{y \vert p(f), \mathbf{x}^q}$  by taking
+$n_y=51$ Monte Carlo samples from $p(f)$'s predictive distribution at
+$\mathbf{x}_q$
+ \item discretize $p^\star$ to a finite set of $n_r=25$ representer points (Thompson
+sampling from $p(f)$ on candidate points)
+ \item estimating $p^\star_{\mathcal{D}_n}$ on representer points by reusing the samples used 
+for approximating $\mathbb{E}_{p(f)}$
+\item Common random numbers in estimation of
+$\text{ER}(p)(\mathbf{x})$ for different $p(f)$ reduces variance
 \end{itemize}
 \end{block}
 
