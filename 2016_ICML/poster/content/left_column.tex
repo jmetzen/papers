@@ -79,9 +79,16 @@ $\text{ER}(p)(\mathbf{x})$ for different $p(f)$ reduces variance
 
 \begin{figure}
 \centering
-\includegraphics[width=0.48\columnwidth]{../pics/regret_illustration}
+\includegraphics[width=0.48\columnwidth]{../pics/regret_illustration_2}
+\includegraphics[width=0.48\columnwidth]{../pics/regret_scatter}
+\caption{(Left) GP posterior, probability of maximum $p^\star$, and expected regret ER. (Right) Scatter plot of position of optimum and regret of $\mathbf{\tilde x} = 1.5$ versus optimum in sample functions.}
+\label{fig:MRS_illustration}
+\end{figure}
+
+\begin{figure}
+\centering
 \includegraphics[width=0.48\columnwidth]{../pics/acq_comparison}
-\caption{(Left) GP posterior, probability of maximum $p^\star$, expected regret ER, and  $\mathbb{E}[\max(f(\mathbf{x}) - f(1.5), 0)]$ (scale on right-hand side). (Right) GP posterior and different acquisition function. Absolute values have been normalized such that the mean value of acquisition function is $0.5$.}
+\caption{GP posterior and different acquisition function. Absolute values have been normalized such that the mean value of acquisition function is $0.5$.}
 \label{fig:MRS_illustration}
 \end{figure}
 \end{block}
