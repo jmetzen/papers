@@ -6,7 +6,7 @@
 \begin{itemize}
  \item Target functions sampled from a generative model (GP with isotropic RBF kernel
 of length scale $l = 0.1$ and unit signal variance) on $\mathcal{X} = [0, 1]^2$ 
- \item In practice: sample $250$ function values from GP, fit GP to these function values and use resulting posterior mean as target function
+ \item In practice: sample $250$ function values from GP, fit GP to these function values, and use resulting posterior mean as target function
  \item Gaussian noise with standard deviation $\sigma =10^{-3}$ is added to each observation
  \item Model mismatch: target functions from GP with rational quadratic kernel but RBF kernel in surrogate model
 \end{itemize}
@@ -45,7 +45,7 @@ of length scale $l = 0.1$ and unit signal variance) on $\mathcal{X} = [0, 1]^2$
 \begin{block}{\blocktitle{Outlook}}
 \begin{itemize}
  \item For multi-task MRS and results on simulated robotic task: see paper
- \item Open questions: treatment of GP hyperparameters, more efficient approximation techniques for MRS, regret bounds for MRS?
+ \item Open questions: treatment of GP hyperparameters, more efficient approximation techniques for MRS, are there regret bounds for MRS?
  \item Source code: \url{https://github.com/jmetzen/bayesian_optimization}
 \end{itemize}
 \end{block}

@@ -15,9 +15,9 @@ results for a synthetic single-task optimization problem.
 \begin{block}{\blocktitle{Background}}
 \textbf{Bayesian optimization} \cite{shahriari_taking_2016}:
 \begin{itemize}
-\item black-box optimization problems $\mathbf{x} = \arg\min_{\mathbf{x} \in \mathcal{X}} f(x)$ of some function $f: \mathcal{X} \to \mathbb{R}$ on some bounded set $\mathcal{X} \subset \mathbb{R}^D$.
+\item black-box optimization problems $\mathbf{x} = \arg\max_{\mathbf{x} \in \mathcal{X}} f(x)$ of some function $f: \mathcal{X} \to \mathbb{R}$ on some bounded set $\mathcal{X} \subset \mathbb{R}^D$.
 \item maintains a \emph{probabilistic model} $p(f)$ for $f(\mathbf{x})$, typically a Gaussian process (GP)
-\item decides on a query point $\mathbf{x}_{n+1}$ where $f$ will be evaluated next based on GP posterior of first $n$ observations $\mathcal{D}_n=\{(\mathbf{x}_i, y_i)\}_{i=1}^n$ and an \emph{acquisition function}
+\item decides on a query point $\mathbf{x}_{n+1}$ where $f$ will be evaluated next based on GP posterior after first $n$ observations $\mathcal{D}_n=\{(\mathbf{x}_i, y_i)\}_{i=1}^n$ and an \emph{acquisition function}
 \item recommends $\mathbf{\tilde x}_N$ after $N$ queries (optimum of GP or best query point)
 \item objective: minimize \emph{simple regret} 
 $R_f(\mathbf{\tilde  x}_N) = f(\mathbf{x}^\star) - f(\mathbf{\tilde  x}_N) = \max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{\tilde x}_N)$
@@ -46,14 +46,14 @@ Minimum regret search (MRS): acquistion function based directly on external obje
 = \mathbb{E}_{p(f)}[\max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{
 x})]$
  \item For fixed GP $p(f)$, $\arg\min_\mathbf{x} \text{ER}(p)(\mathbf{x})$ corresponds to the maximizer of the GP mean
- \item MRS aims at selecting query points s.t. ER is minimized also with respect to resulting $p(f)$
- \item Myopic choice: select next query point s.t. minimum ER is reduced the most (in expectation)
+ \item MRS aims at selecting query points s.t.\  ER is minimized also with respect to resulting $p(f)$
+ \item Myopic choice: select next query point s.t.\ minimum ER is reduced the most (in expectation)
  \item $a_{\text{MRS}^{\text{point}}}(\mathbf{x}^q)
 	= \min_{\mathbf{\tilde x}}\text{ER}(p_n)(\mathbf{\tilde x})
 	 - \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[\min_{\mathbf{\tilde x}}  \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})]$
- \item Additionally also account for uncertainty in minimizer $\mathbf{\tilde x}$ of $\text{ER}$ yields MRS
+ \item Additionally also accounting for uncertainty in minimizer $\mathbf{\tilde x}$ of $\text{ER}$ yields MRS
  \item $a_{\text{MRS}}(\mathbf{x}^q)
-    = \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_n}[\text{ER}(p_n)(\mathbf{\tilde x})] 
+    = \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_{\mathcal{D}_n}}[\text{ER}(p_n)(\mathbf{\tilde x})] 
 	   - \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[
 		  \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_{\mathcal{D}_n \cup \{(\mathbf{x}^q, y)\}}}[
 			 \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})]]$
@@ -68,7 +68,7 @@ $\mathbf{x}_q$
  \item discretize $p^\star$ to a finite set of $n_r=25$ representer points (Thompson
 sampling from $p(f)$ on candidate points)
  \item estimating $p^\star_{\mathcal{D}_n}$ on representer points by reusing the samples used 
-for approximating $\mathbb{E}_{p(f)}$
+for approximating $\mathbb{E}_{p(f)}$ (incurs a small bias)
 \item Common random numbers in estimation of
 $\text{ER}(p)(\mathbf{x})$ for different $p(f)$ reduces variance
 \end{itemize}
