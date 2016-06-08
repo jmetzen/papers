@@ -47,31 +47,43 @@
        \bibliographystyle{abbrv}
        \nobibliography{../literature}}
 
-\begin{frame}{Motivation: Bayesian optimization}
+\begin{frame}{Introduction}
 
-
+\begin{itemize}
+  \item Motivation: optimization of expensive target functions
+  \item Examples:
+  \begin{itemize}
+    \item Automated machine learning (computational cost)
+    \item Process optimization (economical cost)
+    \item Robot learning (supervision cost)
+    \item Animal testing (moral cost)
+  \end{itemize}
+  \pause
+  \item Objective: Find approximate optimum of target function with a very small number of function evaluations (``queries'')
+  \pause
+   \item Approach: Invest significant amounts of computation to determine ``optimal'' sequence of query points
+\end{itemize}
+\vspace*{4cm}
 \end{frame}
 
 \begin{frame}{Bayesian Optimization}
-\textbf{Bayesian optimization}\footcite{shahriari_taking_2016}:
+Bayesian optimization\footcite{shahriari_taking_2016}:
 \begin{itemize}
-\item black-box optimization problems: $\mathbf{x} = \arg\min_{\mathbf{x} \in \mathcal{X}} f(x)$ of some function $f: \mathcal{X} \to \mathbb{R}$ on some bounded set $\mathcal{X} \subset \mathbb{R}^D$.
+\item black-box optimization problems: $\mathbf{x} = \arg\max_{\mathbf{x} \in \mathcal{X}} f(x)$ of some function $f: \mathcal{X} \to \mathbb{R}$ on some bounded set $\mathcal{X} \subset \mathbb{R}^D$.
 \item \emph{probabilistic model} $p(f)$ for $f(\mathbf{x})$, typically a Gaussian process (GP)
 \item based on GP posterior of first $n$ observations $\mathcal{D}_n=\{(\mathbf{x}_i, y_i)\}_{i=1}^n$ and an \emph{acquisition function}: decides on a query point $\mathbf{x}_{n+1}$ where $f$ will be evaluated next
 \item recommends $\mathbf{\tilde x}_N$ after $N$ queries (optimum of GP or best query point)
 \item objective: minimize \emph{simple regret} 
 $R_f(\mathbf{\tilde  x}_N) = f(\mathbf{x}^\star) - f(\mathbf{\tilde  x}_N) = \max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{\tilde x}_N)$
 \end{itemize}
+\vspace*{2cm}
 \end{frame}
 
 \begin{frame}{Entropy Search}
 \begin{itemize}
-\item Let
-   \begin{itemize}
-   \item $p^\star(x \vert \mathcal{D}_n)$ denote the posterior distribution (after observing $\mathcal{D}_n$) of the unknown optimizer $\mathbf{x}^\star = \arg\max_{\mathbf{x} \in \mathcal{X}} f(\mathbf{x})$.
-   \item $H(\mathbf{x}^\star \vert \mathcal{D}_n)$ denote the differential entropy of $p^\star(x \vert \mathcal{D}_n)$
-   \end{itemize}
-   \item Entropy Search (ES)\footcite{hennig_entropy_2012} is an information theoretic acquisition fct.:
+    \item Let $p^\star(x \vert \mathcal{D}_n)$ denote the posterior distribution (after observing $\mathcal{D}_n$) of the unknown optimizer $\mathbf{x}^\star = \arg\max_{\mathbf{x} \in \mathcal{X}} f(\mathbf{x})$.
+    \item and $H(\mathbf{x}^\star \vert \mathcal{D}_n)$ denote the differential entropy of $p^\star(x \vert \mathcal{D}_n)$
+    \item Entropy Search (ES)\footcite{hennig_entropy_2012} is an information theoretic acquisition fct.:
 $$a_{ES}(\mathbf{x}, \mathcal{D}_n) = H(\mathbf{x}^\star \vert \mathcal{D}_n) - \mathbb{E}_{y \vert \mathbf{x}, \mathcal{D}_n}   [H(\mathbf{x}^\star \vert \mathcal{D}_n \cup \{(\mathbf{x}, y))]$$
    \end{itemize}
    \pause
@@ -79,47 +91,57 @@ $$a_{ES}(\mathbf{x}, \mathcal{D}_n) = H(\mathbf{x}^\star \vert \mathcal{D}_n) - 
    \vspace*{-.25cm}
    \begin{figure}
    \centering
-   \includegraphics[width=0.48\columnwidth]{../pics/regret_illustration_2}
+   \includegraphics[width=0.48\columnwidth]{../pics/regret_illustration_3}
    \visible<3->{
      \includegraphics[width=0.48\columnwidth]{../pics/regret_scatter}
    }
    \vspace*{-.25cm}
-   \caption{(Left) GP posterior, probability of maximum $p^\star$, and expected regret ER. (Right) Scatter plot of  position of optimum and regret of $\mathbf{\tilde x} = 1.5$ versus optimum in sample functions.}
+   \caption{\tiny (Left) GP posterior, probability of maximum $p^\star$, and expected regret ER. \visible<3->{(Right) Scatter plot of  position of optimum and regret of $\mathbf{\tilde x} = 1.5$ versus optimum in sample functions.}}
    \label{fig:MRS_illustration}
    \end{figure}
 \end{frame}
 
 
-\begin{frame}{Minimum Regret Search}
+\begin{frame}{Minimum Regret Search (MRS)}
 
-MRS: acquistion function based directly on external objective of minimizing simple regret
+Acquisition function based directly on minimizing simple regret
 \begin{itemize}
  \item Expected simple regret: $\text{ER}(p)(\mathbf{x}) = \mathbb{E}_{p(f)}[R_f(\mathbf{x})]
 = \mathbb{E}_{p(f)}[\max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{
 x})]$
  \item For fixed GP $p(f)$, $\arg\min_\mathbf{x} \text{ER}(p)(\mathbf{x})$ corresponds to the maximizer of the GP mean
- \item MRS aims at selecting query points s.t. ER is minimized also with respect to resulting $p(f)$
- \item Myopic choice: select next query point s.t. minimum ER is reduced the most (in expectation)
+\only<2->{
+ \item MRS aims at selecting query points s.t.\ ER is minimized also with respect to resulting $p(f)$
+ \item Myopic choice: MRS$^{\text{point}}$ selects next query point s.t.\ minimum ER is reduced the most (in expectation)
   $$a_{\text{MRS}^{\text{point}}}(\mathbf{x}^q)
   = \min_{\mathbf{\tilde x}}\text{ER}(p_n)(\mathbf{\tilde x})
    - \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[\min_{\mathbf{\tilde x}}  \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})]$$
+ \visible<3->{
  \item MRS additionally also accounts for uncertainty in minimizer $\mathbf{\tilde x}$ of $\text{ER}$ 
   $$a_{\text{MRS}}(\mathbf{x}^q)
-    = \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_n}[\text{ER}(p_n)(\mathbf{\tilde x})] 
+    = \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_{\mathcal{D}_n}}[\text{ER}(p_n)(\mathbf{\tilde x})] 
      - \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[
       \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_{\mathcal{D}_n \cup \{(\mathbf{x}^q, y)\}}}[
        \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})]]$$
+  }
+  }
 \end{itemize}
-
+\only<1>{
+\begin{center}
+\includegraphics[width=0.58\columnwidth]{../pics/regret_illustration_4}
+\end{center}
+}
 \end{frame}
 
-\begin{frame}{Minimum Regret Search Illustration}
+\begin{frame}{Illustration of Acquisition Functions}
 \begin{figure}
 \centering
-\includegraphics[width=0.48\columnwidth]{../pics/acq_comparison}
+\includegraphics[width=0.48\columnwidth]{../pics/acq_comparison_2}
 \end{figure}
 
+\vspace*{-.5cm}
 \begin{itemize}
+\item ES tends to query close to areas where $p^\star$ is large
 \item MRS$^\text{point}$ tends to query in areas which are risky for current recommendation (large simple regret possible)
 \item MRS is more smooth than MRS$^\text{point}$ since it accounts for uncertainty in recommendation
 \end{itemize}
@@ -158,17 +180,6 @@ Synthetic Single-Task Benchmark:
 \end{frame}
 
 
-\begin{frame}{Results: }
-\begin{figure}
-\centering
-\includegraphics[width=.8\textwidth]{../pics/es_analysis}
-\label{fig:es_analysis}
-\end{figure}
-
-Acquisition functions on a target function at $N=100$ and 25 representer points; darker areas correspond to larger values. ES focuses on sampling in areas with high density of $p^\star$ (many representer points), while MRS focuses on unexplored areas that are populated by representer points (non-zero $p^\star$).
-
-\end{frame}
-
 
 \begin{frame}{Results: Model-mismatch}
 \begin{figure}
@@ -200,9 +211,20 @@ Acquisition functions on a target function at $N=100$ and 25 representer points;
   \vspace*{1.5cm}
   \pause
   \begin{center}
-   Thank you for your attention! \\
+   Thank you for your attention and see you at the poster! \\
    Do you have questions, comments, or ideas?
    \end{center}
+
+\end{frame}
+
+\begin{frame}{Results: MRS versus ES}
+\begin{figure}
+\centering
+\includegraphics[width=.8\textwidth]{../pics/es_analysis}
+\label{fig:es_analysis}
+\end{figure}
+
+Acquisition functions on a target function at $N=100$ and 25 representer points; darker areas correspond to larger values. ES focuses on sampling in areas with high density of $p^\star$ (many representer points), while MRS focuses on unexplored areas that are populated by representer points (non-zero $p^\star$).
 
 \end{frame}
 
