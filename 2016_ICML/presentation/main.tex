@@ -67,12 +67,19 @@
 \end{frame}
 
 \begin{frame}{Bayesian Optimization}
-Bayesian optimization\footcite{shahriari_taking_2016}:
+Bayesian optimization\footcite{shahriari_taking_2016} in a nutshell:
 \begin{itemize}
 \item black-box optimization problems: $\mathbf{x} = \arg\max_{\mathbf{x} \in \mathcal{X}} f(x)$ of some function $f: \mathcal{X} \to \mathbb{R}$ on some bounded set $\mathcal{X} \subset \mathbb{R}^D$.
 \item \emph{probabilistic model} $p(f)$ for $f(\mathbf{x})$, typically a Gaussian process (GP)
-\item based on GP posterior of first $n$ observations $\mathcal{D}_n=\{(\mathbf{x}_i, y_i)\}_{i=1}^n$ and an \emph{acquisition function}: decides on a query point $\mathbf{x}_{n+1}$ where $f$ will be evaluated next
-\item recommends $\mathbf{\tilde x}_N$ after $N$ queries (optimum of GP or best query point)
+\pause
+\item For $n=1\dots N$:
+\begin{itemize}
+   \item determine GP posterior $p(f\vert \mathcal{D}_n)$ for $\mathcal{D}_n=\{(\mathbf{x}_i, y_i)\}_{i=1}^n$ 
+   \item decide on a query point based on \emph{acquisition function} $a$: $\mathbf{x}_{n+1} = \arg\max_{\mathbf{x} \in \mathcal{X}} a_{p(f\vert \mathcal{D}_n)}(x) $
+\item observe (potentially noisy) $y_{n+1} = f(\mathbf{x}_{n+1}) + \epsilon$
+\end{itemize}
+\pause
+\item recommend $\mathbf{\tilde x}_N$ after $N$ queries (optimum of GP or best query point)
 \item objective: minimize \emph{simple regret} 
 $R_f(\mathbf{\tilde  x}_N) = f(\mathbf{x}^\star) - f(\mathbf{\tilde  x}_N) = \max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{\tilde x}_N)$
 \end{itemize}
@@ -150,19 +157,19 @@ x})]$
 
 
 \begin{frame}{Experimental Setup}
-Synthetic Single-Task Benchmark:
+Synthetic Single-Task Benchmark\footcite{hennig_entropy_2012}:
 \begin{itemize}
  \item Target functions sampled from a generative model on $\mathcal{X} = [0, 1]^2$ 
  \item In practice: 
    \begin{itemize} 
-   \item sample $250$ pairs $(\mathbf{x}, f(\mathbf{x}))$ from function $f \sim GP(f)$
-   \item fit another GP to these pairs
+   \item sample $250$ pairs $(\mathbf{x}, f(\mathbf{x}))$ from function $f \sim p(f)$
+   \item fit GP to these pairs
    \item use resulting posterior mean as target function
    \end{itemize}
  \item Gaussian noise with standard deviation $\sigma =10^{-3}$ is added to each observation
  \item Probabilistic surrogate model used in BO:\\ GP with isotropic RBF kernel of length scale $l = 0.1$ and unit signal variance
  \pause
- \item Generative model
+ \item Generative model $p(f)$
     \begin{itemize} 
     \item without model mismatch: GP with isotropic RBF kernel ($l = 0.1$ and unit signal variance)
     \item with model mismatch:  GP with isotropic rational quadratic kernel ($l = 0.1$, $\alpha=1.0$ and unit signal variance)
@@ -195,7 +202,7 @@ Synthetic Single-Task Benchmark:
   \begin{itemize}
     \item Additional content of the paper:
     \begin{itemize}
-      \item Multi-task Minimum regret search
+      \item multi-task minimum regret search
       \item results on simulated robotic task
     \end{itemize}
     \pause
