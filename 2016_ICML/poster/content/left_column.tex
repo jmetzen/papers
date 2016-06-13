@@ -3,11 +3,11 @@
 
 \begin{block}{\blocktitle{Abstract}}
 \justifying
-We propose minimum regret search (MRS), a novel acquisition function for Bayesian
+We propose minimum regret search (MRS), a \emph{novel acquisition function} for Bayesian
 optimization. MRS bears similarities with information-theoretic approaches
 such as entropy search (ES). However, while ES aims in each query at maximizing the
-information gain with respect to the global maximum, MRS aims at minimizing the
-expected simple regret of its ultimate recommendation for the optimum. While empirically ES and MRS perform similar in most of the
+information gain with respect to the global maximum, MRS aims at \emph{minimizing the
+expected simple regret} of its ultimate recommendation for the optimum. While empirically ES and MRS perform similar in most of the
 cases, MRS produces fewer outliers with high simple regret than ES. We provide empirical
 results for a synthetic single-task optimization problem.
 \end{block}
@@ -18,7 +18,7 @@ results for a synthetic single-task optimization problem.
 \item black-box optimization problems $\mathbf{x} = \arg\max_{\mathbf{x} \in \mathcal{X}} f(x)$ of some function $f: \mathcal{X} \to \mathbb{R}$ on some bounded set $\mathcal{X} \subset \mathbb{R}^D$.
 \item maintains a \emph{probabilistic model} $p(f)$ for $f(\mathbf{x})$, typically a Gaussian process (GP)
 \item decides on a query point $\mathbf{x}_{n+1}$ where $f$ will be evaluated next based on GP posterior after first $n$ observations $\mathcal{D}_n=\{(\mathbf{x}_i, y_i)\}_{i=1}^n$ and an \emph{acquisition function}
-\item recommends $\mathbf{\tilde x}_N$ after $N$ queries (optimum of GP or best query point)
+\item recommends $\mathbf{\tilde x}_N$ as optimum after $N$ queries (optimum of GP or best query point)
 \item objective: minimize \emph{simple regret} 
 $R_f(\mathbf{\tilde  x}_N) = f(\mathbf{x}^\star) - f(\mathbf{\tilde  x}_N) = \max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{\tilde x}_N)$
 \end{itemize}
@@ -38,9 +38,9 @@ of the posterior distribution $p^\star(x \vert \mathcal{D}_n)$ of the unknown op
 
 \end{block}
 
-\begin{block}{\blocktitle{Minimum Regret Search}}
+\begin{block}{\blocktitle{Minimum Regret Search (MRS)}}
 
-Minimum regret search (MRS): acquistion function based directly on external objective of minimizing simple regret
+Acquistion function based directly on external objective of minimizing simple regret
 \begin{itemize}
  \item Expected simple regret: $\text{ER}(p)(\mathbf{x}) = \mathbb{E}_{p(f)}[R_f(\mathbf{x})]
 = \mathbb{E}_{p(f)}[\max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{
