@@ -5,11 +5,12 @@
 {%
   \setbeamercolor{mycolor}{fg=black,bg=white}
    \begin{beamercolorbox}{mycolor}
-    \centering{\parbox{70cm}{\centering{\huge{\textbf{\inserttitle}}}}}\\[5mm]
-    \centering{\parbox{70cm}{\centering{\Large{\insertauthor\\[.5cm] University Bremen,
-Robotics Research Group, Robert-Hooke-Str.~1, 28359 Bremen, Germany\\
-Robert Bosch GmbH, Corporate Research CR/AEY2, 70442 Stuttgart, Germany
-}}}}
+    \raisebox{-1.5cm}{\centering{\parbox{70cm}{\centering{\huge{\textbf{\inserttitle}}}}}}
+
+    \centering{\parbox{70cm}{\centering{\Large{\raisebox{-1.5cm}{\insertauthor}\\[.5cm] 
+    University Bremen, Robotics Research Group, Robert-Hooke-Str.~1, 28359 Bremen, Germany\\
+    Robert Bosch GmbH, Corporate Research CR/AEY2, 70442 Stuttgart, Germany}
+}}}
 
   \end{beamercolorbox}%
   \vspace{-6cm}
