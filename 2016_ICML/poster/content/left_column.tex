@@ -31,7 +31,7 @@ Acquisition functions decide where to query next:
 \item Expected Improvement (EI): $a_{EI}(\mathbf{x}; \mathcal{D}_n) := \mathbb{E}[(f(x) - \tau)\mathbb{I}(f(x) > \tau)]$
 \item Entropy Search (ES) \cite{hennig_entropy_2012}: $a_{ES}(\mathbf{x}, \mathcal{D}_n)
   = H(\mathbf{x}^\star \vert \mathcal{D}_n) - \mathbb{E}_{y \vert \mathbf{x}, \mathcal{D}_n}
-	[H(\mathbf{x}^\star \vert \mathcal{D}_n \cup \{(\mathbf{x}, y))]$,
+	[H(\mathbf{x}^\star \vert \mathcal{D}_n \cup \{(\mathbf{x}, y)\})]$,
 	where $H(\mathbf{x}^\star \vert \mathcal{D}_n)$ denotes the differential entropy
 of the posterior distribution $p^\star(x \vert \mathcal{D}_n)$ of the unknown optimizer $\mathbf{x}^\star = \arg\max_{\mathbf{x} \in \mathcal{X}} f(\mathbf{x})$.
 \end{itemize}

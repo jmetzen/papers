@@ -23,17 +23,29 @@
 \usepackage{bibentry}
 \usepackage{color}
 
-\usepackage{animate}
+\usepackage{xcolor}
+\usepackage{mathtools}
+
+\makeatletter
+\newcommand{\redub}{}
+\def\redub#1{%
+  \@ifnextchar_%
+    {\@redub{#1}}
+    {\@latex@warning{Missing argument for \string\redub}\@redub{#1}_{}}%
+}
+\def\@redub#1_#2{%
+    \colorlet{currentcolor}{.}%
+    \color{red}%
+    \underbrace{\color{currentcolor}#1}_{\color{red}#2}%
+    \color{currentcolor}%
+}
+\makeatother
+
 
 % Customization
 \newcommand{\footcite}[1]{$^[$\footnote{\begin{tiny}\bibentry{#1}\end{tiny}}$^]$}
 
 \renewcommand{\emph}[1]{\textbf{#1}}
-
-\newcommand{\taskparam}{{\color{red} \tau}}
-\newcommand{\skillparam}{{\color{blue} \theta}}
-
-%\newcommand{\newblock}{}
 
 % Author, Title, etc.
 \title[ICML 2016]{Minimum Regret Search for Single- and Multi-Task Optimization}
@@ -59,7 +71,7 @@
     \item Animal testing (moral cost)
   \end{itemize}
   \pause
-  \item Objective: Find approximate optimum of target function with a very small number of function evaluations (``queries'')
+  \item Objective: Find close-to-optimal value of target function with a very small number of function evaluations (``queries'')
   \pause
    \item Approach: Invest significant amounts of computation to determine ``optimal'' sequence of query points
 \end{itemize}
@@ -79,7 +91,7 @@ Bayesian optimization\footcite{shahriari_taking_2016} in a nutshell:
 \item observe (potentially noisy) $y_{n+1} = f(\mathbf{x}_{n+1}) + \epsilon$
 \end{itemize}
 \pause
-\item recommend $\mathbf{\tilde x}_N$ after $N$ queries (optimum of GP or best query point)
+\item recommend $\mathbf{\tilde x}_N$ as optimum  after $N$ queries (optimum of GP or best query point)
 \item objective: minimize \emph{simple regret} 
 $R_f(\mathbf{\tilde  x}_N) = f(\mathbf{x}^\star) - f(\mathbf{\tilde  x}_N) = \max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{\tilde x}_N)$
 \end{itemize}
@@ -91,7 +103,8 @@ $R_f(\mathbf{\tilde  x}_N) = f(\mathbf{x}^\star) - f(\mathbf{\tilde  x}_N) = \ma
     \item Let $p^\star(x \vert \mathcal{D}_n)$ denote the posterior distribution (after observing $\mathcal{D}_n$) of the unknown optimizer $\mathbf{x}^\star = \arg\max_{\mathbf{x} \in \mathcal{X}} f(\mathbf{x})$.
     \item and $H(\mathbf{x}^\star \vert \mathcal{D}_n)$ denote the differential entropy of $p^\star(x \vert \mathcal{D}_n)$
     \item Entropy Search (ES)\footcite{hennig_entropy_2012} is an information theoretic acquisition fct.:
-$$a_{ES}(\mathbf{x}, \mathcal{D}_n) = H(\mathbf{x}^\star \vert \mathcal{D}_n) - \mathbb{E}_{y \vert \mathbf{x}, \mathcal{D}_n}   [H(\mathbf{x}^\star \vert \mathcal{D}_n \cup \{(\mathbf{x}, y))]$$
+$$a_{ES}(\mathbf{x}, \mathcal{D}_n) = \redub{H(\mathbf{x}^\star \vert \mathcal{D}_n)}_{\text{current entropy}} 
+- \redub{\mathbb{E}_{y \vert \mathbf{x}, \mathcal{D}_n}   [H(\mathbf{x}^\star \vert \mathcal{D}_n \cup \{(\mathbf{x}, y)\})]}_{\text{expected posterior entropy for query at } \mathbf{x}}$$
    \end{itemize}
    \pause
 
@@ -103,7 +116,7 @@ $$a_{ES}(\mathbf{x}, \mathcal{D}_n) = H(\mathbf{x}^\star \vert \mathcal{D}_n) - 
      \includegraphics[width=0.48\columnwidth]{../pics/regret_scatter}
    }
    \vspace*{-.25cm}
-   \caption{\tiny (Left) GP posterior, probability of maximum $p^\star$, and expected regret ER. \visible<3->{(Right) Scatter plot of  position of optimum and regret of $\mathbf{\tilde x} = 1.5$ versus optimum in sample functions.}}
+   %\caption{\tiny (Left) GP posterior, probability of maximum $p^\star$, and expected regret ER. \visible<3->{(Right) Scatter plot of  position of optimum and regret of $\mathbf{\tilde x} = 1.5$ versus optimum in sample functions.}}
    \label{fig:MRS_illustration}
    \end{figure}
 \end{frame}
@@ -111,20 +124,23 @@ $$a_{ES}(\mathbf{x}, \mathcal{D}_n) = H(\mathbf{x}^\star \vert \mathcal{D}_n) - 
 
 \begin{frame}{Minimum Regret Search (MRS)}
 
-Acquisition function based directly on minimizing simple regret
+Acquisition function based on minimizing the expected simple regret
 \begin{itemize}
  \item Expected simple regret: $\text{ER}(p)(\mathbf{x}) = \mathbb{E}_{p(f)}[R_f(\mathbf{x})]
 = \mathbb{E}_{p(f)}[\max_{\mathbf{x}} f(\mathbf{x}) - f(\mathbf{
 x})]$
- \item For fixed GP $p(f)$, $\arg\min_\mathbf{x} \text{ER}(p)(\mathbf{x})$ corresponds to the maximizer of the GP mean
-\only<2->{
+ \only<1>{
+ \item For fixed GP $p(f)$, $\mathbf{\tilde x} = \arg\min_\mathbf{x} \text{ER}(p)(\mathbf{x})$ corresponds to the maximizer of the GP mean
+ }
+ \only<2->{
  \item MRS aims at selecting query points s.t.\ ER is minimized also with respect to resulting $p(f)$
  \item Myopic choice: MRS$^{\text{point}}$ selects next query point s.t.\ minimum ER is reduced the most (in expectation)
   $$a_{\text{MRS}^{\text{point}}}(\mathbf{x}^q)
-  = \min_{\mathbf{\tilde x}}\text{ER}(p_n)(\mathbf{\tilde x})
-   - \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[\min_{\mathbf{\tilde x}}  \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})]$$
+  = \redub{\min_{\mathbf{\tilde x}}\text{ER}(p_n)(\mathbf{\tilde x})}_{\text{current minimum ER}}
+   - \redub{\mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[\min_{\mathbf{\tilde x}}  \text{ER}(p^{[\mathbf{x}^q, y]}_n)(\mathbf{\tilde x})]}_{\text{expected posterior minimum ER for query at } \mathbf{x}^q}$$
  \visible<3->{
- \item MRS additionally also accounts for uncertainty in minimizer $\mathbf{\tilde x}$ of $\text{ER}$ 
+ \item Minimizer $\arg\min_{\mathbf{\tilde x}}\text{ER}(p_n)(\mathbf{\tilde x})$ can be seen as point estimate for $\mathbf{\tilde x}_N$ 
+ \item MRS additionally also accounts for uncertainty regarding $\mathbf{\tilde x}_N$: 
   $$a_{\text{MRS}}(\mathbf{x}^q)
     = \mathbb{E}_{\mathbf{\tilde x} \sim p^\star_{\mathcal{D}_n}}[\text{ER}(p_n)(\mathbf{\tilde x})] 
      - \mathbb{E}_{y \vert p_n(f), \mathbf{x}^q}[
@@ -166,6 +182,7 @@ Synthetic Single-Task Benchmark\footcite{hennig_entropy_2012}:
    \item fit GP to these pairs
    \item use resulting posterior mean as target function
    \end{itemize}
+ \pause
  \item Gaussian noise with standard deviation $\sigma =10^{-3}$ is added to each observation
  \item Probabilistic surrogate model used in BO:\\ GP with isotropic RBF kernel of length scale $l = 0.1$ and unit signal variance
  \pause
@@ -197,9 +214,11 @@ Synthetic Single-Task Benchmark\footcite{hennig_entropy_2012}:
 \end{frame}
 
 
-\begin{frame}{Outlook}
+\begin{frame}{Summary and Outlook}
   
   \begin{itemize}
+    \item Contribution: Novel acquisition which explicitly aims at minimizing the expected simple regret
+    \pause
     \item Additional content of the paper:
     \begin{itemize}
       \item multi-task minimum regret search
@@ -215,7 +234,7 @@ Synthetic Single-Task Benchmark\footcite{hennig_entropy_2012}:
     \item Source code available at: \url{https://github.com/jmetzen/bayesian_optimization}
   \end{itemize}
 
-  \vspace*{1.5cm}
+  \vspace*{1cm}
   \pause
   \begin{center}
    Thank you for your attention and see you at the poster! \\
@@ -224,7 +243,9 @@ Synthetic Single-Task Benchmark\footcite{hennig_entropy_2012}:
 
 \end{frame}
 
-\begin{frame}{Results: MRS versus ES}
+\appendix
+
+\begin{frame}[noframenumbering]{Results: MRS versus ES}
 \begin{figure}
 \centering
 \includegraphics[width=.8\textwidth]{../pics/es_analysis}
